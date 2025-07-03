@@ -1,8 +1,50 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Never Never Land";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section -->
+<div class="hero-banner" style="background-image: url('/images/nnl-banner.jpg'); background-size: cover; background-position: center; height: 500px; position: relative;">
+    <div class="hero-content text-white text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <h1 class="display-3 font-weight-bold">Never Never Land</h1>
+        <p class="lead">Where storybook dreams come to life</p>
+        <a href="/Tickets" class="btn btn-lg btn-primary mt-3">Buy Tickets</a>
+    </div>
+</div>
+
+<!-- Icon Links Section -->
+<div class="container py-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <a href="/Attractions"><img src="/images/icons/attractions.png" class="mb-2" width="80" /></a>
+            <h5>Attractions</h5>
+            <p>Walk through timeless fairytales with original sculpture scenes.</p>
+        </div>
+        <div class="col-md-4">
+            <a href="/Events"><img src="/images/icons/events.png" class="mb-2" width="80" /></a>
+            <h5>Events</h5>
+            <p>Live storytelling, character shows, and magical experiences.</p>
+        </div>
+        <div class="col-md-4">
+            <a href="/Membership"><img src="/images/icons/membership.png" class="mb-2" width="80" /></a>
+            <h5>Membership</h5>
+            <p>Become part of the magic with unlimited seasonal visits.</p>
+        </div>
+    </div>
+</div>
+
+<!-- News / Update Block  -->
+<div class="bg-light py-4">
+    <div class="container">
+        <h2 class="text-center mb-4">Park News & Updates</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Restoration Progress</h5>
+                <p>The Never Never Land figures are being restored with original paints and materials.</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Upcoming Grand Reopening</h5>
+                <p>We're planning a soft opening preview later this year — stay tuned for ticket info!</p>
+            </div>
+        </div>
+    </div>
 </div>
