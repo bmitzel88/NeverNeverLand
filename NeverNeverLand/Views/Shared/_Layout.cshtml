@@ -10,24 +10,43 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NeverNeverLand</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+        <!-- Top Utility Bar -->
+        <div class="utility-bar d-flex align-items-center justify-content-between px-3 py-2" style="background-color: #e6f2f8;">
+            <div class="logo-bar d-flex align-items-center">
+                <img src="/images/nnl-logo-vertical.png" alt="Never Never Land" style="height: 120px;" />
+            </div>
+            <nav aria-label="Utility" class="top-buttons d-flex align-items-center gap-2">
+                <a href="/Tickets" class="btn btn-sm btn-ticket">TICKETS</a>
+                <a href="/Membership" class="btn btn-sm btn-membership">MEMBERSHIP</a>
+                <a href="/Gifts" class="btn btn-sm btn-membership">GIFTS</a>
+                <!-- Login/Logout button -->
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <form method="post" asp-area="" asp-page="/Account/Logout" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-ticket">LOGOUT</button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn btn-sm btn-ticket">LOGIN</a>
+                }
+            </nav>
+        </div>
+
+        <!-- Main Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Main">
+            <a class="navbar-brand" href="/">Never Never Land Tacoma</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Attractions">Attractions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Events">Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Contact">Contact</a></li>
+                </ul>
             </div>
         </nav>
     </header>
