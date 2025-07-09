@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NeverNeverLand.Models;
 
 namespace NeverNeverLand.Data
 {
@@ -9,5 +10,6 @@ namespace NeverNeverLand.Data
             : base(options)
         {
         }
+        public DbSet<Models.Ticket> Ticket { get; set; }
     }
 }
