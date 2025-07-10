@@ -5,7 +5,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace  NeverNeverLand.Areas.Identity.Pages.Account.Manage
+namespace  NeverNeverLand.Areas.Account.Pages.Manage
 {
     /// <summary>
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -116,7 +116,7 @@ namespace  NeverNeverLand.Areas.Identity.Pages.Account.Manage
         public static string PageNavClass(ViewContext viewContext, string page)
         {
             var activePage = viewContext.ViewData["ActivePage"] as string
-                ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
+                ?? Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
             return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
         }
     }
