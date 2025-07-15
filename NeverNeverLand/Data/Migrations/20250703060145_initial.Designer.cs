@@ -13,7 +13,7 @@ namespace NeverNeverLand.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250703060145_initial")]
-    partial class initial
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
