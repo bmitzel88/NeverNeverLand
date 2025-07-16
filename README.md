@@ -3,7 +3,7 @@
 Welcome to the official backend repository for the **Never Never Land** website — a modern recreation of the beloved storybook theme park once located in Tacoma, Washington. This project is part of a personal effort to digitally restore and revive the charm and magic of the original park.
 
 > 📢 **Note:** This GitHub repository is private and contains the backend code only.  
-> The public website is viewable at: *(placeholder link)*
+> The public website is viewable at: *(future link here)*
 
 ---
 
@@ -16,7 +16,7 @@ This application is a full-featured ASP.NET Core MVC website with secure user ac
 - **Online Ticketing System** – Visitors can purchase admission and see their ticket history.
 - **Individual Accounts** – Includes secure login, registration, and ticket tracking.
 - **Admin Tools** – Authorized admins can manage users, tickets, and park updates.
-- **Modern UI** – Custom Bootstrap styling inspired by PDZA, themed to match NNL’s nostalgic storybook vibe.
+- **Modern UI** – Custom Bootstrap styling, designed to meet NNL customer's online needs.
 
 ---
 
