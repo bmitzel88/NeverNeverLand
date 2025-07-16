@@ -49,9 +49,10 @@ To maintain security and avoid abuse, this codebase is kept private. However, ge
 The website is currently being built and tested. Future updates will include:
 
 - Membership system
+- Tickets system
+- Gift shop
 - Event management
 - Park map and gallery
-- Online donation form
 
 ---
 
