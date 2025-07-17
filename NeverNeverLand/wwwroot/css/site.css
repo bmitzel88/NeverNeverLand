@@ -1,4 +1,22 @@
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.page-footer {
+
+}
+
 body, .nav-main {
     font-family: Georgia, sans-serif;
     font-weight: 700;

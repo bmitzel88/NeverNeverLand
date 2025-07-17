@@ -22,7 +22,7 @@
                 <!-- Login/Logout button -->
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    <form method="post" asp-area="" asp-page="/Account/Logout" class="d-inline">
+                    <form method="post" asp-area="Account" asp-page="/Logout" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-ticket">LOGOUT</button>
                     </form>
                 }
