@@ -50,11 +50,13 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main" class="flex-grow-1 d-flex flex-column">
+        <div class="flex-grow-1 d-flex flex-column">
+            <div class="container py-3">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
 
     <footer class="border-top footer text-muted">
         <div class="container">
