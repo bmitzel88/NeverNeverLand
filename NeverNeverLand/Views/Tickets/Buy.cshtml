@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Buy Tickets";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4 fix-highlight-text">
+                        🎟️ Buy Tickets
+                    </h2>
+
+                    <form asp-action="Checkout" method="post">
+                        <div class="mb-3">
+                            <label for="adultTickets" class="form-label fw-bold">Adult Tickets</label>
+                            <input type="number" name="AdultTickets" id="adultTickets" class="form-control" value="1" min="0" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="childTickets" class="form-label fw-bold">Child Tickets</label>
+                            <input type="number" name="ChildTickets" id="childTickets" class="form-control" value="0" min="0" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">
+                            Checkout with Stripe
+                        </button>
+                    </form>
+
+                    <p class="text-center text-muted mt-3 mb-0 fix-highlight-text" style="font-size: 0.9rem;">
+                        Infants under 2 are free and don’t need a ticket.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
