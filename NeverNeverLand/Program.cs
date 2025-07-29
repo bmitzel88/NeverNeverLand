@@ -18,6 +18,8 @@ builder.Services.AddControllersWithViews();
 // Configure Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
+builder.Services.AddTransient<EmailService>();
+
 builder.Services.AddSession();
 
 var app = builder.Build();
@@ -49,3 +51,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+
