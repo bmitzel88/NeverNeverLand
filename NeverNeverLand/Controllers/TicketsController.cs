@@ -39,8 +39,16 @@ namespace NeverNeverLand.Controllers
 
         // POST: Tickets/CreateCheckoutSession
         [HttpPost]
-        public IActionResult CreateCheckoutSession(int adultQty, int childQty)
+        public IActionResult CreateCheckoutSession(string email, int adultQty, int childQty)
         {
+
+            if (string.IsNullOrEmpty(email) || (adultQty + childQty) == 0)
+            {
+                ModelState.AddModelError("", "Please provide an email and select at least one ticket.");
+                return View("Buy"); // This will return users back to the Buy form with an error message
+            }
+
+
             StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
 
             var lineItems = new List<SessionLineItemOptions>();
@@ -83,7 +91,7 @@ namespace NeverNeverLand.Controllers
             {
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = lineItems,
-                CustomerEmail = null, // Let Stripe prompt for buyer email
+                CustomerEmail = email, 
                 Mode = "payment",
                 SuccessUrl = Url.Action("Success", "Tickets", null, Request.Scheme),
                 CancelUrl = Url.Action("Buy", "Tickets", null, Request.Scheme)

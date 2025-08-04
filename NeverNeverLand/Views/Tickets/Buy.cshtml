@@ -11,20 +11,17 @@
                         🎟️ Buy Tickets
                     </h2>
 
-                    <form asp-action="Checkout" method="post">
-                        <div class="mb-3">
-                            <label for="adultTickets" class="form-label fw-bold">Adult Tickets</label>
-                            <input type="number" name="AdultTickets" id="adultTickets" class="form-control" value="1" min="0" />
-                        </div>
+                    <form asp-action="CreateCheckoutSession" method="post">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" required />
 
-                        <div class="mb-4">
-                            <label for="childTickets" class="form-label fw-bold">Child Tickets</label>
-                            <input type="number" name="ChildTickets" id="childTickets" class="form-control" value="0" min="0" />
-                        </div>
+                        <label for="adultQty">Adult Tickets</label>
+                        <input type="number" name="adultQty" min="0" value="1" />
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">
-                            Checkout with Stripe
-                        </button>
+                        <label for="childQty">Child Tickets</label>
+                        <input type="number" name="childQty" min="0" value="0" />
+
+                        <button type="submit">Continue to Payment</button>
                     </form>
 
                     <p class="text-center text-muted mt-3 mb-0 fix-highlight-text" style="font-size: 0.9rem;">
