@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NeverNeverLand.Data;
 using NeverNeverLand.Models;
+using NeverNeverLand.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddControllersWithViews();
 // Configure Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
-builder.Services.AddTransient<EmailService>();
+builder.Services.AddTransient<IEmailService, SendGridEmailService>();
 
 builder.Services.AddSession();
 
