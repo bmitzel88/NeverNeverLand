@@ -25,7 +25,7 @@ namespace NeverNeverLand.Controllers
         public async Task<IActionResult> StripeWebhook()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            var secret = "your_stripe_webhook_secret"; // From Stripe Dashboard
+            var secret = ""; 
 
 
             try
