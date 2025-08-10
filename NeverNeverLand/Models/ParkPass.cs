@@ -1,4 +1,6 @@
-﻿namespace NeverNeverLand.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace NeverNeverLand.Models
 {
     public class ParkPass
     {
@@ -9,14 +11,15 @@
         /// <summary>
         /// Name/Type of the park pass
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
         /// <summary>
         /// Description of the park pass type
         /// </summary>
-        public string Description { get; set; }
+        public required string Description { get; set; }
         /// <summary>
         /// Price of the park pass
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         /// <summary>
         /// Start date of validity
