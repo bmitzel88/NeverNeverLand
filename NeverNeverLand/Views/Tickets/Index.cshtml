@@ -1,1 +1,55 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Tickets";
+}
+
+<div class="container my-5">
+    <div class="row g-5">
+        <!-- Ticket Table -->
+        <div class="col-lg-7">
+            <h2 class="mb-4">🎟️ Available Tickets</h2>
+            <div class="table-responsive rounded shadow-sm border">
+                <table class="table table-hover align-middle mb-0 nnl-ticket-table">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Online Price</th>
+                            <th>Gate Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr>
+                            <td><strong>Adult</strong></td>
+                            <td>Ages 17 and up</td>
+                            <td>$8.00</td>
+                            <td>$10.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Child</strong></td>
+                            <td>Ages 3–16</td>
+                            <td>$4.00</td>
+                            <td>$5.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infant</strong></td>
+                            <td>Ages 2 and below</td>
+                            <td><span class="text-success fw-bold">Free</span></td>
+                            <td><span class="text-success fw-bold">Free</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+            <a href="@Url.Action("Buy", "Tickets")" class="btn btn-primary btn-lg w-100 mb-3 shadow-sm">
+                🎫 Buy Tickets
+            </a>
+            <p class="text-muted text-center mb-3">Want unlimited seasonal visits?</p>
+            <a href="@Url.Action("Index", "Pass")" class="btn btn-outline-secondary btn-lg w-100 shadow-sm">
+                🛡️ Buy Park Pass
+            </a>
+        </div>
+    </div>
+</div>

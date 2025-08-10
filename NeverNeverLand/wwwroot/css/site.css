@@ -1,60 +1,91 @@
-
+/* === Global Layout Reset === */
 html, body {
     height: 100%;
     margin: 0;
 }
 
+/* === Base Flex Layout for Sticky Footer === */
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; /* Ensures footer stays at bottom (supposedly) */
 }
 
 main {
-    flex-grow: 1;
+    flex-grow: 1; /* Fills available space between header and footer */
     display: flex;
     flex-direction: column;
 }
 
-
+/* === Header & Footer Styling === */
 header, footer {
-
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Light gray background */
 }
-    
 
+/* === Card Component Styling (Modern Container Box) === */
+.card {
+    background-color: #ffffff; /* White background */
+    border-radius: 1rem; /* Rounded corners */
+}
 
+/* === Primary Button Styling (Stripe Checkout, etc.) === */
+.btn-primary {
+    background-color: #005eb8; /* Blue color */
+    border-color: #005eb8;
+}
+
+    .btn-primary:hover {
+        background-color: #004999; /* Darker blue on hover */
+    }
+
+/* === Table Styling: Prevent Highlighting in Ticket Table === */
+.nnl-ticket-table td,
+.nnl-ticket-table th {
+    user-select: none; /* Prevents text from being selected */
+    cursor: default; /* Keeps the normal arrow cursor */
+}
+
+/* === Global Font Styling === */
 body, .nav-main {
-    font-family: Georgia, sans-serif;
-    font-weight: 700;
+    font-family: Georgia, sans-serif; /* Classic serif font */
+    font-weight: 700; /* Bold for better readability */
 }
 
+/* === Custom Button Colors === */
 .btn-ticket {
-    background-color: #a6ce39;
+    background-color: #a6ce39; /* Light green */
     color: black;
 }
 
+/* === Fix: Prevent Highlighting text === */
+.fix-highlight-text {
+    user-select: none; /* Prevents text from being selected */
+    cursor: default; /* Keeps the normal arrow cursor */
+}
+
 .btn-membership {
-    background-color: #72cce3;
+    background-color: #72cce3; /* Light blue */
     color: black;
 }
 
 .btn-donate {
-    background-color: #f7931e;
+    background-color: #f7931e; /* Bright orange */
     color: black;
 }
 
+/* === General Button Hover Effect === */
 .btn:hover {
-    opacity: 0.85;
-    text-decoration: none;
+    opacity: 0.85; /* Slight transparency */
+    text-decoration: none; /* Removes underline */
 }
 
+/* === Navigation Styling === */
 .nav .nav-link.nav-main {
-    color: #1a1a1a;
+    color: #1a1a1a; /* Dark text */
     margin: 0 10px;
     font-size: 16px;
 }
 
     .nav .nav-link.nav-main:hover {
-        text-decoration: underline;
+        text-decoration: underline; /* Adds underline on hover */
     }
