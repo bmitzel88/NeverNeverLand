@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Pass Activated";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4 p-lg-5 text-center">
+            <div class="display-6 mb-2">🎉 You're all set!</div>
+            <p class="lead mb-4">Your Never Never Land Season Pass has been activated.</p>
+
+            <div class="row g-3 justify-content-center">
+                <div class="col-md-8">
+                    <div class="alert alert-success shadow-sm mb-3">
+                        A receipt and your digital pass have been sent to your email.
+                    </div>
+                    <p class="text-muted mb-4">
+                        Show your digital pass (or a printed copy) with photo ID at the gate.
+                        Passes are valid April–October for the current season.
+                    </p>
+                </div>
+            </div>
+
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>

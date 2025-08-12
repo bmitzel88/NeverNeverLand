@@ -116,7 +116,7 @@
                 if (result.error) {
                     document.getElementById("card-errors").textContent = result.error.message;
                 } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
-                    window.location.href = "@Url.Action("Success", "ParkPassess")";
+                    window.location.href = "@Url.Action("Success", "ParkPasses")";
                 }
             });
         })();

@@ -7,7 +7,7 @@ namespace NeverNeverLand.Models
         public int TicketId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime PurchaseDate { get; set; }
