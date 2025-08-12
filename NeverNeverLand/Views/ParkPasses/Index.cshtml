@@ -1,0 +1,89 @@
+﻿@model PassViewModel
+@{
+    ViewData["Title"] = "Season Pass";
+}
+
+<div class="container my-5">
+    <!-- Hero -->
+    <div class="position-relative overflow-hidden rounded-4 shadow-sm mb-4"
+         style="background: url('/images/nnl-banner.jpg') center/cover; min-height: 280px;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,.35);"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-white text-center px-3">
+            <h1 class="display-5 fw-bold">Never Never Land Season Pass</h1>
+            <p class="lead mb-0">Unlimited visits, one great price.</p>
+        </div>
+    </div>
+
+    <!-- Current Price -->
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h2 class="mb-0">@Model.PhaseLabel Pricing</h2>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">
+                            Season: April – October
+                        </span>
+                    </div>
+                    @if (Model.PhaseLabel == "Off-Season")
+                    {
+                        <p class="text-muted mb-4">@Model.Blurb</p>
+                        <a class="btn btn-secondary disabled w-100">Sales Closed</a>
+                    }
+                    else
+                    {
+                        <div class="display-4 fw-bold mb-2">$@Model.CurrentPrice</div>
+                        <p class="text-muted mb-4">@Model.Blurb</p>
+                        <a class="btn btn-primary btn-lg w-100" href="@Url.Action("Buy", "ParkPasses")">
+                            Buy Season Pass
+                        </a>
+                    }
+                    <p class="mt-3 small text-muted mb-0">
+                        Valid for the current season only. Non-transferable. Photo ID required at entry.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h3 class="mb-3">Passholder Benefits</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">🎟 <strong>Unlimited entry</strong> all season (April–October)</li>
+                        <li class="mb-2">🍦 <strong>10% off</strong> snacks & drinks</li>
+                        <li class="mb-2">🎉 <strong>Passholder events</strong> and previews</li>
+                        <li class="mb-2">👨‍👩‍👧 <strong>Bring-along flexibility</strong> based on pass tier</li>
+                        <li>🛍 <strong>Merch discounts</strong> in the gift shop</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="card border-0 shadow-sm rounded-4 mt-4">
+        <div class="card-body p-4">
+            <h3 class="mb-3">How it works</h3>
+            <p class="mb-2">
+                Buy before April 1 to get <strong>Early Bird</strong> pricing. From April through July, passes are at
+                <strong>regular</strong> price. Starting in August, a <strong>late-season discount</strong> applies automatically.
+            </p>
+            <p class="mb-0">
+                Your pass is valid through October 31 of the current year. Pricing resets for the next season with an Early Bird window again before April.
+            </p>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card border-0 shadow-sm rounded-4 mt-4">
+        <div class="card-body p-4">
+            <h3 class="mb-3">FAQ</h3>
+            <div class="mb-2"><strong>When does my pass start?</strong><br />Immediately upon purchase, through Oct 31.</div>
+            <div class="mb-2"><strong>Do I need tickets if I have a pass?</strong><br />No—just show your pass and ID at entry.</div>
+            <div class="mb-2"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
+            <div class="mb-0"><strong>When do park passes go back on sale after the off season?</strong><br />Every year on January 1st.</div>
+        </div>
+    </div>
+</div>

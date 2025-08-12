@@ -1,0 +1,124 @@
+﻿@model PassBuyViewModel
+@{
+    ViewData["Title"] = "Buy Season Pass";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0 p-4 pass-surface">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <h1 class="h3 mb-1">Never Never Land Season Pass</h1>
+                <div class="text-muted mb-3">Season: April – October</div>
+
+                @if (Model.PhaseLabel == "Off-Season")
+                {
+                    <div class="alert alert-secondary">
+                        Sales are currently closed. Please check back before next season.
+                    </div>
+                }
+                else
+                {
+                    <div class="display-5 fw-bold mb-1">$@Model.CurrentPrice</div>
+                    <div class="text-muted mb-4">@Model.PhaseLabel Pricing</div>
+                }
+
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">🎟 Unlimited entry all season</li>
+                    <li class="mb-2">🍦 10% off snacks & drinks</li>
+                    <li class="mb-2">🎉 Passholder events & previews</li>
+                </ul>
+            </div>
+
+            <div class="col-lg-7">
+                @if (Model.PhaseLabel != "Off-Season")
+                {
+                    <form id="pass-form" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label">Email for receipt</label>
+                            <input id="email" type="email" class="form-control" required />
+                            <div class="invalid-feedback">Please enter a valid email.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Pass Type</label>
+                            <select id="passType" class="form-select" required>
+                                @foreach (var t in Model.PassTypes)
+                                {
+                                    <option value="@t">@t</option>
+                                }
+                            </select>
+                            <div class="invalid-feedback">Please choose a pass type.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Card details</label>
+                            <div id="card-element" class="form-control p-2"></div>
+                            <div id="card-errors" class="text-danger small mt-2"></div>
+                        </div>
+
+                        <button id="submit" class="btn btn-primary btn-lg w-100" type="submit">
+                            Pay & Activate Pass
+                        </button>
+                        <div id="status" class="small text-muted mt-2"></div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        (function () {
+            const stripe = Stripe("@Model.PublishableKey");
+            const elements = stripe.elements();
+            const card = elements.create("card");
+            card.mount("#card-element");
+
+            const form = document.getElementById("pass-form");
+            if (!form) return;
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                // basic client validation
+                if (!form.checkValidity()) { form.classList.add('was-validated'); return; }
+
+                const email = document.getElementById("email").value.trim();
+                const passType = document.getElementById("passType").value;
+
+                const tokenField = document.querySelector('input[name="__RequestVerificationToken"]');
+                const res = await fetch("@Url.Action("CreatePaymentIntent", "ParkPasses")", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": tokenField?.value ?? ""
+                    },
+                    body: JSON.stringify({ email, passType })
+                });
+
+                if (!res.ok) {
+                    document.getElementById("status").textContent = "Could not start payment.";
+                    return;
+                }
+
+                const data = await res.json();
+                const result = await stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: { email: email }
+                    }
+                });
+
+                if (result.error) {
+                    document.getElementById("card-errors").textContent = result.error.message;
+                } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+                    window.location.href = "@Url.Action("Success", "ParkPasses")";
+                }
+            });
+        })();
+    </script>
+}

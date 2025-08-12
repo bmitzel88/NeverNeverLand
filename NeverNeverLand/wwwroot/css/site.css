@@ -8,13 +8,24 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensures footer stays at bottom (supposedly) */
+    min-height: 100vh;
+
+    /*Forest background image*/
+    background-image: url('/images/background-forest.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 main {
-    flex-grow: 1; /* Fills available space between header and footer */
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+}
+
+footer,
+.footer {
+    position: static !important; /* kill sticky/fixed */
+    bottom: auto !important;
 }
 
 /* === Header & Footer Styling === */
@@ -89,3 +100,37 @@ body, .nav-main {
     .nav .nav-link.nav-main:hover {
         text-decoration: underline; /* Adds underline on hover */
     }
+
+
+/* === Tickets Styling === */
+
+/* Tickets page surface */
+.ticket-surface {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+    .ticket-surface .card-header {
+        background: transparent;
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .ticket-surface .card-body {
+        padding: 1.5rem;
+    }
+
+@media (min-width: 992px) {
+    .ticket-surface {
+        padding: 1.25rem;
+    }
+}
+
+/* keep table readable on the card */
+.ticket-surface .table {
+    margin-bottom: 0;
+    background: transparent;
+}

@@ -1,27 +1,43 @@
-﻿using NeverNeverLand.Services;
+﻿using System.Text;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
 
-public class SendGridEmailService : IEmailService
+namespace NeverNeverLand.Services.SendGridEmailService
 {
-    private readonly IConfiguration _config; // Configuration to access SendGrid API key
-
-    public SendGridEmailService(IConfiguration config) // Constructor to inject configuration
+    public class SendGridEmailService : IEmailService
     {
-        _config = config;
-    }
+        private readonly IConfiguration _config;
 
-    
-    public async Task SendTicketAsync(string toEmail, string subject, string htmlContent) // Method to send an email with a ticket
-    {
-        var apiKey = _config["SendGrid:ApiKey"];
-        var client = new SendGridClient(apiKey);
+        public SendGridEmailService(IConfiguration config)
+        {
+            _config = config;
+        }
 
-        var from = new EmailAddress("tickets@neverneverland.com", "Never Never Land");
-        var to = new EmailAddress(toEmail);
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent: null, htmlContent);
+        public Task SendTicketAsync(string toEmail, string subject, string htmlContent)
+            => SendAsync(toEmail, subject, htmlContent);
 
-        await client.SendEmailAsync(msg);
+        // If you kept this in the interface, keep it here; otherwise remove both.
+        public Task SendPassAsync(string toEmail, string subject, string htmlContent)
+            => SendAsync(toEmail, subject, htmlContent);
+
+        private async Task SendAsync(string toEmail, string subject, string htmlContent)
+        {
+            var apiKey = _config["SendGrid:ApiKey"];
+            if (string.IsNullOrWhiteSpace(apiKey))
+                throw new InvalidOperationException("Missing SendGrid:ApiKey");
+
+            var from = new EmailAddress(
+                _config["SendGrid:FromEmail"] ?? "noreply@neverneverland.com",
+                _config["SendGrid:FromName"] ?? "Never Never Land"
+            );
+
+            var to = new EmailAddress(toEmail);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent: null, htmlContent);
+
+            var response = await new SendGridClient(apiKey).SendEmailAsync(msg);
+            if ((int)response.StatusCode < 200 || (int)response.StatusCode >= 300)
+                throw new ApplicationException($"SendGrid failed: {response.StatusCode}. Body: {response.Body}");
+        }
     }
 }

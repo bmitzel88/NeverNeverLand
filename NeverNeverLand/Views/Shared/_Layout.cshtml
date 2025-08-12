@@ -17,7 +17,7 @@
             </div>
             <nav aria-label="Utility" class="top-buttons d-flex align-items-center gap-2">
                 <a href="/Tickets" class="btn btn-sm btn-ticket">TICKETS</a>
-                <a href="/Membership" class="btn btn-sm btn-membership">MEMBERSHIP</a>
+                <a href="/ParkPasses" class="btn btn-sm btn-membership">PARK PASS</a>
                 <a href="/Gifts" class="btn btn-sm btn-membership">GIFTS</a>
                 <!-- Login/Logout button -->
                 @if (User.Identity?.IsAuthenticated ?? false)
@@ -35,7 +35,7 @@
 
         <!-- Main Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Main">
-            <a class="navbar-brand" href="/">Never Never Land Tacoma</a>
+            <a class="navbar-brand" href="/">Never Never Land</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -50,15 +50,15 @@
             </div>
         </nav>
     </header>
-    <main role="main" class="flex-grow-1 d-flex flex-column">
-        <div class="flex-grow-1 d-flex flex-column">
+    <main role="main">
+        <div class="flex-grow-1">
             <div class="container py-3">
                 @RenderBody()
             </div>
         </div>
     </main>
 
-    <footer class="border-top footer text-muted">
+    <footer class="mt-auto border-top footer text-muted">
         <div class="container">
             &copy; 2025 - NeverNeverLand - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

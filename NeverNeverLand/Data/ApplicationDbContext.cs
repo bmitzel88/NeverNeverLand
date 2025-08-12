@@ -11,5 +11,6 @@ namespace NeverNeverLand.Data
         {
         }
         public DbSet<Models.Ticket> Ticket { get; set; }
+        public DbSet<NeverNeverLand.Models.ParkPass> ParkPass { get; set; } = default!;
     }
 }
