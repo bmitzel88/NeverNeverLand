@@ -8,13 +8,17 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensures footer stays at bottom (supposedly) */
+    min-height: 100vh;
 }
 
 main {
-    flex-grow: 1; /* Fills available space between header and footer */
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+}
+
+footer,
+.footer {
+    position: static !important; /* kill sticky/fixed */
+    bottom: auto !important;
 }
 
 /* === Header & Footer Styling === */

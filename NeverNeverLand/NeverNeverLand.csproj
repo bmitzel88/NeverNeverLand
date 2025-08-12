@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\ParkPass\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

@@ -14,16 +14,94 @@ namespace NeverNeverLand.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // Season runs April 1 – Oct 31 
+        private static readonly DateTime SeasonStart = new(DateTime.Now.Year, 4, 1);
+        private static readonly DateTime SeasonEnd = new(DateTime.Now.Year, 10, 31);
+
         public ParkPassesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: ParkPasses
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.ParkPass.ToListAsync());
+            var today = DateTime.Today;
+
+            // Pricing 
+            const decimal earlyBird = 90m;   // Jan 1 – Mar 31
+            const decimal regular = 120m;  // Apr 1 – Jul 31
+            const decimal late = 96m;   // Aug 1 – Oct 31
+
+            string phase;
+            decimal price;
+            string blurb;
+
+            // Determine current phase and price
+            var year = today.Year;
+            var ebStart = new DateTime(year, 1, 1);
+            var ebEnd = new DateTime(year, 3, 31);
+            var regEnd = new DateTime(year, 7, 31);
+            var lateEnd = new DateTime(year, 10, 31);
+
+            if (today >= ebStart && today <= ebEnd)
+            {
+                phase = "Early Bird";
+                price = earlyBird;
+                blurb = "Buy now and lock in the lowest price for the season.";
+            }
+            else if (today >= SeasonStart && today <= regEnd)
+            {
+                phase = "Regular";
+                price = regular;
+                blurb = "Enjoy unlimited visits all season long.";
+            }
+            else if (today >= new DateTime(year, 8, 1) && today <= lateEnd)
+            {
+                phase = "Late-Season";
+                price = late;
+                blurb = "Join now and enjoy the rest of the season at a reduced price.";
+            }
+            else
+            {
+                // Off-season: hide price / disable buy if you prefer
+                phase = "Off-Season";
+                price = regular; // or 0m
+                blurb = "Season passes will be available again before next season.";
+            }
+
+            var vm = new PassViewModel
+            {
+                CurrentPrice = price,
+                PhaseLabel = phase,
+                Blurb = blurb
+            };
+
+            return View(vm);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /// 
