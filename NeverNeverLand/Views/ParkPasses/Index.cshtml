@@ -34,7 +34,7 @@
                     {
                         <div class="display-4 fw-bold mb-2">$@Model.CurrentPrice</div>
                         <p class="text-muted mb-4">@Model.Blurb</p>
-                        <a class="btn btn-primary btn-lg w-100" href="@Url.Action("Buy", "Pass")">
+                        <a class="btn btn-primary btn-lg w-100" href="@Url.Action("Buy", "ParkPasses")">
                             Buy Season Pass
                         </a>
                     }
@@ -76,13 +76,14 @@
         </div>
     </div>
 
-    <!-- FAQ (optional, short) -->
+    <!-- FAQ -->
     <div class="card border-0 shadow-sm rounded-4 mt-4">
         <div class="card-body p-4">
             <h3 class="mb-3">FAQ</h3>
             <div class="mb-2"><strong>When does my pass start?</strong><br />Immediately upon purchase, through Oct 31.</div>
             <div class="mb-2"><strong>Do I need tickets if I have a pass?</strong><br />No—just show your pass and ID at entry.</div>
-            <div class="mb-0"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
+            <div class="mb-2"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
+            <div class="mb-0"><strong>When do park passes go back on sale after the off season?</strong><br />Every year on January 1st.</div>
         </div>
     </div>
 </div>
