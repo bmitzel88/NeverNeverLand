@@ -66,6 +66,7 @@ body, .nav-main {
 .btn-ticket {
     background-color: #a6ce39; /* Light green */
     color: black;
+    
 }
 
 /* === Fix: Prevent Highlighting text === */
@@ -74,14 +75,50 @@ body, .nav-main {
     cursor: default; /* Keeps the normal arrow cursor */
 }
 
-.btn-membership {
+.btn-parkpass {
     background-color: #72cce3; /* Light blue */
     color: black;
 }
 
-.btn-donate {
-    background-color: #f7931e; /* Bright orange */
+/* Brand/logo text */
+.navbar-brand {
+    color: white !important;
+}
+
+/* Navigation links */
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: #ffdd55 !important; /* Yellow accent */
+    }
+
+/* Top right buttons */
+.btn-tickets {
+    background-color: #f0c33c; /* Mother Goose yellow */
     color: black;
+}
+
+.btn-parkpass {
+    background-color: #6bbde4; /* Light blue */
+    color: white;
+}
+
+.btn-gifts {
+    background-color: #d13b3b; /* Book red */
+    color: white;
+}
+
+.btn-logout {
+    background-color: #d4b052; /* Golden yellow from bottom book */
+    color: black;
+}
+
+/* Slight shadow for depth */
+.btn-tickets, .btn-parkpass, .btn-gifts, .btn-logout {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* === General Button Hover Effect === */

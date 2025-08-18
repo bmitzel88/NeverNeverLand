@@ -14,36 +14,58 @@
         </div>
     </div>
 
-    <!-- Current Price -->
-    <div class="row g-4 align-items-center">
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h2 class="mb-0">@Model.PhaseLabel Pricing</h2>
-                        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">
-                            Season: April – October
-                        </span>
-                    </div>
-                    @if (Model.PhaseLabel == "Off-Season")
-                    {
-                        <p class="text-muted mb-4">@Model.Blurb</p>
-                        <a class="btn btn-secondary disabled w-100">Sales Closed</a>
-                    }
-                    else
-                    {
-                        <div class="display-4 fw-bold mb-2">$@Model.CurrentPrice</div>
-                        <p class="text-muted mb-4">@Model.Blurb</p>
-                        <a class="btn btn-primary btn-lg w-100" href="@Url.Action("Buy", "ParkPasses")">
-                            Buy Season Pass
-                        </a>
-                    }
-                    <p class="mt-3 small text-muted mb-0">
-                        Valid for the current season only. Non-transferable. Photo ID required at entry.
-                    </p>
+    <!-- Pricing & Coverage -->
+    <section id="pricing" class="my-5">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
+                <h2 class="h4 mb-3">Pricing & Coverage</h2>
+                <p class="text-muted mb-0 small">Same benefits across all passes — coverage size is the only difference.</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive rounded shadow-sm border">
+                    <table class="table align-middle table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-start">Pass Type</th>
+                                <th class="text-center">Current Price</th>
+                                <th class="text-center">Covers</th>
+                                <th class="text-start">Benefits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start">
+                                    <span class="badge bg-primary me-2">Personal</span>
+                                    <strong>Personal</strong>
+                                </td>
+                                <td class="text-center">$X</td>
+                                <td class="text-center">1 person</td>
+                                <td class="text-start">All standard park benefits; unlimited visits during pass term.</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">
+                                    <span class="badge bg-success me-2">Family</span>
+                                    <strong>Family</strong>
+                                </td>
+                                <td class="text-center">$Y</td>
+                                <td class="text-center">Up to 4 people</td>
+                                <td class="text-start">All Personal benefits; one pass covers your group.</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">
+                                    <span class="badge bg-warning text-dark me-2">Family+</span>
+                                    <strong>Family+</strong>
+                                </td>
+                                <td class="text-center">$Z</td>
+                                <td class="text-center">Up to 6 people</td>
+                                <td class="text-start">All Family benefits; best for larger groups.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </section>
 
         <!-- Benefits -->
         <div class="col-lg-6">
@@ -62,12 +84,95 @@
         </div>
     </div>
 
+    <!-- Pass Types -->
+    <section id="pass-types" class="my-5">
+        <h2 class="mb-4 text-center">Choose Your Park Pass</h2>
+
+        <div class="row g-4">
+            <!-- Personal -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-primary">Personal</span>
+                        </div>
+                        <h5 class="card-title mb-1">Personal</h5>
+                        <p class="text-muted">Covers <strong>1</strong> person.</p>
+                        <ul class="list-unstyled small mb-4">
+                            <li>✔ Unlimited visits during pass term</li>
+                            <li>✔ Member discounts & events</li>
+                            <li>✔ Same benefits as other passes</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a asp-controller="ParkPasses"
+                               asp-action="Buy"
+                               asp-route-type="Personal"
+                               class="btn btn-primary w-100">
+                                Choose Personal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-success">Family</span>
+                        </div>
+                        <h5 class="card-title mb-1">Family</h5>
+                        <p class="text-muted">Covers <strong>up to 4</strong> people.</p>
+                        <ul class="list-unstyled small mb-4">
+                            <li>✔ All Personal benefits</li>
+                            <li>✔ One pass covers your group</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a asp-controller="ParkPasses"
+                               asp-action="Buy"
+                               asp-route-type="Family"
+                               class="btn btn-success w-100">
+                                Choose Family
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family+ -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-warning text-dark">Family+</span>
+                        </div>
+                        <h5 class="card-title mb-1">Family+</h5>
+                        <p class="text-muted">Covers <strong>up to 6</strong> people.</p>
+                        <ul class="list-unstyled small mb-4">
+                            <li>✔ All Family benefits</li>
+                            <li>✔ Best for larger groups</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a asp-controller="ParkPasses"
+                               asp-action="Buy"
+                               asp-route-type="FamilyPlus"
+                               class="btn btn-warning w-100">
+                                Choose Family+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- How It Works -->
     <div class="card border-0 shadow-sm rounded-4 mt-4">
         <div class="card-body p-4">
             <h3 class="mb-3">How it works</h3>
             <p class="mb-2">
-                Buy before April 1 to get <strong>Early Bird</strong> pricing. From April through July, passes are at
+                Buy from January 1st to March 31st to get <strong>Early Bird</strong> pricing. From April through July, passes are at
                 <strong>regular</strong> price. Starting in August, a <strong>late-season discount</strong> applies automatically.
             </p>
             <p class="mb-0">
@@ -82,8 +187,7 @@
             <h3 class="mb-3">FAQ</h3>
             <div class="mb-2"><strong>When does my pass start?</strong><br />Immediately upon purchase, through Oct 31.</div>
             <div class="mb-2"><strong>Do I need tickets if I have a pass?</strong><br />No—just show your pass and ID at entry.</div>
-            <div class="mb-2"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
-            <div class="mb-0"><strong>When do park passes go back on sale after the off season?</strong><br />Every year on January 1st.</div>
+            <div class="mb-0"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
         </div>
     </div>
 </div>
