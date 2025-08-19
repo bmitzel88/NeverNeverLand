@@ -16,7 +16,7 @@
 
     <!-- Pricing & Coverage -->
     <section id="pricing" class="my-5">
-        <div class="card shadow-sm border-0 rounded-3">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
                 <h2 class="h4 mb-3">Pricing & Coverage</h2>
                 <p class="text-muted mb-0 small">Same benefits across all passes — coverage size is the only difference.</p>
@@ -38,8 +38,9 @@
                                     <span class="badge bg-primary me-2">Personal</span>
                                     <strong>Personal</strong>
                                 </td>
-                                <td class="text-center">$X</td>
-                                <td class="text-center">1 person</td>
+                                <td class="text-center">@Model.PersonalPrice.ToString("C")</td>
+                                <td class="text-center">1 named adult</td>
+                                <td class="text-center">Up to 2 guests</td>
                                 <td class="text-start">All standard park benefits; unlimited visits during pass term.</td>
                             </tr>
                             <tr>
@@ -47,8 +48,9 @@
                                     <span class="badge bg-success me-2">Family</span>
                                     <strong>Family</strong>
                                 </td>
-                                <td class="text-center">$Y</td>
-                                <td class="text-center">Up to 4 people</td>
+                                <td class="text-center">@Model.FamilyPrice.ToString("C")</td>
+                                <td class="text-center">Up to 2 named adults</td>
+                                <td class="text-center">Up to 4 guests</td>
                                 <td class="text-start">All Personal benefits; one pass covers your group.</td>
                             </tr>
                             <tr>
@@ -56,8 +58,9 @@
                                     <span class="badge bg-warning text-dark me-2">Family+</span>
                                     <strong>Family+</strong>
                                 </td>
-                                <td class="text-center">$Z</td>
-                                <td class="text-center">Up to 6 people</td>
+                                <td class="text-center">@Model.FamilyPlusPrice.ToString("C")</td>
+                                <td class="text-center">Up to 2 named adults</td>
+                                <td class="text-center">Up to 7 guests</td>
                                 <td class="text-start">All Family benefits; best for larger groups.</td>
                             </tr>
                         </tbody>
@@ -67,7 +70,23 @@
         </div>
     </section>
 
-        <!-- Benefits -->
+    <!-- Current Pricing Phase card -->
+    @{
+        var phase = Model.PhaseLabel?.Trim() ?? "";
+        var pretty = phase
+        .Replace("EarlyBird", "Early Bird")
+        .Replace("Late-Season", "Late Season");
+
+        var subtitle = phase switch
+        {
+            "EarlyBird" or "Early Bird" => "Early Bird pricing runs Jan 1st – Mar 31st.",
+            "Regular" => "Regular pricing runs Apr 1st – Aug 31st.",
+            "Late-Season" or "Late Season" => "Late-season pricing runs Sep 1st – Oct 31st.",
+            _ => "Season runs April 1st – October 31st. Season passes will be on sale starting Jan 1st."
+        };
+    }
+    <div class="row g-4 my-3">
+        <!-- Left: Passholder Benefits -->
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4">
@@ -82,11 +101,30 @@
                 </div>
             </div>
         </div>
+
+        <!-- Right: Current Pricing Phase -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="badge bg-info text-dark fs-6 py-2 px-3">Now Live</span>
+                        <h3 class="h5 mb-0">@pretty Pricing</h3>
+                    </div>
+                    <div class="text-muted mb-4">@subtitle</div>
+
+                    <div class="mt-auto">
+                        <a asp-controller="ParkPasses" asp-action="Buy" class="btn btn-primary btn-lg w-100">
+                            Buy a Season Pass
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Pass Types -->
     <section id="pass-types" class="my-5">
-        <h2 class="mb-4 text-center">Choose Your Park Pass</h2>
+        <h2 class="mb-4 text-center text-white">Choose Your Park Pass</h2>
 
         <div class="row g-4">
             <!-- Personal -->
@@ -97,7 +135,7 @@
                             <span class="badge bg-primary">Personal</span>
                         </div>
                         <h5 class="card-title mb-1">Personal</h5>
-                        <p class="text-muted">Covers <strong>1</strong> person.</p>
+                        <p class="text-muted">Covers <strong>2</strong> other guests.</p>
                         <ul class="list-unstyled small mb-4">
                             <li>✔ Unlimited visits during pass term</li>
                             <li>✔ Member discounts & events</li>
@@ -123,7 +161,7 @@
                             <span class="badge bg-success">Family</span>
                         </div>
                         <h5 class="card-title mb-1">Family</h5>
-                        <p class="text-muted">Covers <strong>up to 4</strong> people.</p>
+                        <p class="text-muted">Covers <strong>up to 4</strong> other guests.</p>
                         <ul class="list-unstyled small mb-4">
                             <li>✔ All Personal benefits</li>
                             <li>✔ One pass covers your group</li>
@@ -148,7 +186,7 @@
                             <span class="badge bg-warning text-dark">Family+</span>
                         </div>
                         <h5 class="card-title mb-1">Family+</h5>
-                        <p class="text-muted">Covers <strong>up to 6</strong> people.</p>
+                        <p class="text-muted">Covers <strong>up to 7</strong> other guests.</p>
                         <ul class="list-unstyled small mb-4">
                             <li>✔ All Family benefits</li>
                             <li>✔ Best for larger groups</li>
@@ -173,10 +211,10 @@
             <h3 class="mb-3">How it works</h3>
             <p class="mb-2">
                 Buy from January 1st to March 31st to get <strong>Early Bird</strong> pricing. From April through July, passes are at
-                <strong>regular</strong> price. Starting in August, a <strong>late-season discount</strong> applies automatically.
+                <strong>regular</strong> price. Starting in September, a <strong>late-season discount</strong> applies automatically.
             </p>
             <p class="mb-0">
-                Your pass is valid through October 31 of the current year. Pricing resets for the next season with an Early Bird window again before April.
+                Your pass is valid through October 31 of the current year. Pricing resets for the next season with an Early Bird window again in January.
             </p>
         </div>
     </div>
