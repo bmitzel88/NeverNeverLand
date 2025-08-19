@@ -1,37 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace NeverNeverLand.Models
+﻿namespace NeverNeverLand.Models
 {
     public class ParkPass
     {
-        /// <summary>
-        /// Unique identifier for the park pass
-        /// </summary>
-        public int Id { get; set; } 
-        /// <summary>
-        /// Name/Type of the park pass
-        /// </summary>
-        public required string Name { get; set; }
-        /// <summary>
-        /// Description of the park pass type
-        /// </summary>
-        public required string Description { get; set; }
-        /// <summary>
-        /// Price of the park pass
-        /// </summary>
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-        /// <summary>
-        /// Start date of validity
-        /// </summary>
-        public DateTime ValidFrom { get; set; }
-        /// <summary>
-        /// End date of validity
-        /// </summary>
-        public DateTime ValidUntil { get; set; }
-        /// <summary>
-        /// Indicates if the park pass is currently active
-        /// </summary>
-        public bool IsActive { get; set; } 
+        public Guid Id { get; set; }
+        public string Type { get; set; } = "Personal"; // Personal | Family | Family+
+        public int SeasonYear { get; set; }
+        public DateTime ExpiresAt { get; set; }
+        public string Status { get; set; } = "Active";
+        public string QrToken { get; set; } = Guid.NewGuid().ToString("N");
+
+        public int MaxOwners { get; set; } // Personal=1, Family=2, Family+=2
+        public int MaxGuests { get; set; } // Personal=2, Family=4, Family+=7
     }
 }

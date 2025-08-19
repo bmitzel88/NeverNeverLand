@@ -1,4 +1,4 @@
-﻿@model PassBuyViewModel
+﻿@model NeverNeverLand.Models.PassBuyViewModel
 @{
     ViewData["Title"] = "Buy Season Pass";
 }
@@ -8,7 +8,7 @@
         <div class="row g-4">
             <div class="col-lg-5">
                 <h1 class="h3 mb-1">Never Never Land Season Pass</h1>
-                <div class="text-muted mb-3">Season: April – October</div>
+                <div class="text-muted mb-3">Season: @Model.PhaseLabel</div>
 
                 @if (Model.PhaseLabel == "Off-Season")
                 {
@@ -18,7 +18,9 @@
                 }
                 else
                 {
-                    <div class="display-5 fw-bold mb-1">$@Model.CurrentPrice</div>
+                    <div id="priceDisplay" class="display-5 fw-bold mb-1">
+                        @Model.CurrentPrice.ToString("C")
+                    </div>
                     <div class="text-muted mb-4">@Model.PhaseLabel Pricing</div>
                 }
 
@@ -43,10 +45,25 @@
 
                         <div class="mb-3">
                             <label class="form-label">Pass Type</label>
-                            <select id="passType" class="form-select" required>
-                                @foreach (var t in Model.PassTypes)
+                            @{
+                                var options = new[]
                                 {
-                                    <option value="@t">@t</option>
+                                                new { Value="Personal", Text=$"Personal — {Model.PersonalPrice.ToString("C")}" },
+                                                new { Value="Family",   Text=$"Family — {Model.FamilyPrice.ToString("C")}" },
+                                                new { Value="Family+",  Text=$"Family+ — {Model.FamilyPlusPrice.ToString("C")}" }
+                                                };
+                            }
+                            <select id="passType" class="form-select" required>
+                                @foreach (var o in options)
+                                {
+                                    if (o.Value == Model.SelectedPassType)
+                                    {
+                                        <option value="@o.Value" selected>@o.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@o.Value">@o.Text</option>
+                                    }
                                 }
                             </select>
                             <div class="invalid-feedback">Please choose a pass type.</div>
@@ -73,6 +90,13 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         (function () {
+            const prices = {
+                "Personal": @Model.PersonalPrice,
+                "Family": @Model.FamilyPrice,
+                "Family+": @Model.FamilyPlusPrice
+            };
+            const fmt = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
+
             const stripe = Stripe("@Model.PublishableKey");
             const elements = stripe.elements();
             const card = elements.create("card");
@@ -81,14 +105,22 @@
             const form = document.getElementById("pass-form");
             if (!form) return;
 
+            const passTypeEl = document.getElementById("passType");
+            const priceDisplay = document.getElementById("priceDisplay");
+
+            function updatePrice() {
+                const p = prices[passTypeEl.value] ?? @Model.CurrentPrice;
+                if (priceDisplay) priceDisplay.textContent = fmt.format(p);
+            }
+            updatePrice();
+            passTypeEl.addEventListener("change", updatePrice);
+
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
-
-                // basic client validation
                 if (!form.checkValidity()) { form.classList.add('was-validated'); return; }
 
                 const email = document.getElementById("email").value.trim();
-                const passType = document.getElementById("passType").value;
+                const passType = passTypeEl.value;
 
                 const tokenField = document.querySelector('input[name="__RequestVerificationToken"]');
                 const res = await fetch("@Url.Action("CreatePaymentIntent", "ParkPasses")", {
@@ -100,21 +132,15 @@
                     body: JSON.stringify({ email, passType })
                 });
 
-                if (!res.ok) {
-                    document.getElementById("status").textContent = "Could not start payment.";
-                    return;
-                }
+                if (!res.ok) { document.getElementById("status").textContent = "Could not start payment."; return; }
 
                 const data = await res.json();
                 const result = await stripe.confirmCardPayment(data.clientSecret, {
-                    payment_method: {
-                        card: card,
-                        billing_details: { email: email }
-                    }
+                    payment_method: { card: card, billing_details: { email: email } }
                 });
 
                 if (result.error) {
-                    document.getElementById("card-errors").textContent = result.error.message;
+                    document.getElementById("card-errors").textContent = result.error.message ?? "Payment failed.";
                 } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
                     window.location.href = "@Url.Action("Success", "ParkPasses")";
                 }

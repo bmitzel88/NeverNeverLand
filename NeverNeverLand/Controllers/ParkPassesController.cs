@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NeverNeverLand.Data;
 using NeverNeverLand.Models;
+using NeverNeverLand.Services;
 using Stripe;
-using Stripe.Checkout;
 
 namespace NeverNeverLand.Controllers
 {
@@ -18,150 +14,102 @@ namespace NeverNeverLand.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly StripeSettings _stripe;
+        private readonly IPriceService _pricing;
 
-        // Season runs April 1 – Oct 31 
-        private static readonly DateTime SeasonStart = new(DateTime.Now.Year, 4, 1);
-        private static readonly DateTime SeasonEnd = new(DateTime.Now.Year, 10, 31);
-
-        public ParkPassesController(ApplicationDbContext context, IOptions<StripeSettings> stripeOptions)
+        public ParkPassesController(
+            ApplicationDbContext context,
+            IOptions<StripeSettings> stripeOptions,
+            IPriceService pricing)
         {
             _context = context;
-            _stripe = stripeOptions.Value; // Secret & Publishable from config/secrets
+            _stripe = stripeOptions.Value;
+            _pricing = pricing;
         }
 
-
-        /// <summary>
-        /// ParkPasses/Index
-        /// </summary>
-        /// <returns></returns>
         public IActionResult Index()
         {
-            var today = DateTime.Today;
-
-            // Pricing 
-            const decimal earlyBird = 90m;   // Jan 1 – Mar 31
-            const decimal regular = 120m;  // Apr 1 – Jul 31
-            const decimal late = 96m;   // Aug 1 – Oct 31
-
-            string phase;
-            decimal price;
-            string blurb;
-
-            // Determine current phase and price
-            var year = today.Year;
-            var ebStart = new DateTime(year, 1, 1);
-            var ebEnd = new DateTime(year, 3, 31);
-            var regEnd = new DateTime(year, 7, 31);
-            var lateEnd = new DateTime(year, 10, 31);
-
-            if (today >= ebStart && today <= ebEnd)
-            {
-                phase = "Early Bird";
-                price = earlyBird;
-                blurb = "Buy now and lock in the lowest price for the season.";
-            }
-            else if (today >= SeasonStart && today <= regEnd)
-            {
-                phase = "Regular";
-                price = regular;
-                blurb = "Enjoy unlimited visits all season long.";
-            }
-            else if (today >= new DateTime(year, 8, 1) && today <= lateEnd)
-            {
-                phase = "Late-Season";
-                price = late;
-                blurb = "Join now and enjoy the rest of the season at a reduced price.";
-            }
-            else
-            {
-                // Off-season: hide price / disable buy if you prefer
-                phase = "Off-Season";
-                price = regular; // or 0m
-                blurb = "Season passes will be available again before next season.";
-            }
+            var p = _pricing.GetCurrentPrices();
 
             var vm = new PassViewModel
             {
-                CurrentPrice = price,
-                PhaseLabel = phase,
-                Blurb = blurb
+                PhaseLabel = p.SeasonName,
+                Blurb = "Same benefits across all passes — coverage size is the only difference.",
+                CurrentPrice = p.Personal,
+                PersonalPrice = p.Personal,
+                FamilyPrice = p.Family,
+                FamilyPlusPrice = p.FamilyPlus
             };
-
             return View(vm);
         }
 
-        /// <summary>
-        /// Determines the current phase and price based on today's date.
-        /// </summary>
-        /// <returns>correct price depending on the current phase of the season</returns>
-        private (string phase, decimal price) GetPhasePrice()
+        public IActionResult Buy(string type = "Personal")
         {
-            var y = DateTime.Today.Year;
-            var today = DateTime.Today;
-            var earlyB = (new DateTime(y, 1, 1), new DateTime(y, 3, 31), 90m, "Early Bird");
-            var regulr = (SeasonStart, new DateTime(y, 7, 31), 120m, "Regular");
-            var late = (new DateTime(y, 8, 1), new DateTime(y, 10, 31), 96m, "Late-Season");
+            var p = _pricing.GetCurrentPrices();
+            var normalized = NormalizePassType(type) ?? "Personal";
 
-            if (today >= earlyB.Item1 && today <= earlyB.Item2) return (earlyB.Item4, earlyB.Item3);
-            if (today >= regulr.Item1 && today <= regulr.Item2) return (regulr.Item4, regulr.Item3);
-            if (today >= late.Item1 && today <= late.Item2) return (late.Item4, late.Item3);
+            var selectedPrice = normalized switch
+            {
+                "Family" => p.Family,
+                "Family+" => p.FamilyPlus,
+                _ => p.Personal
+            };
 
-            return ("Off-Season", regulr.Item3);
-        }
-
-
-        /// <summary>
-        /// ParkPasses/Buy
-        /// </summary>
-        /// <returns>ParkPasses/Buy view</returns>
-        public IActionResult Buy()
-        {
-            var (phase, price) = GetPhasePrice();
             var vm = new PassBuyViewModel
             {
-                PhaseLabel = phase,
-                CurrentPrice = price,
-                PublishableKey = _stripe.PublishableKey
+                PhaseLabel = p.SeasonName,
+                PublishableKey = _stripe.PublishableKey,
+                SelectedPassType = normalized,
+                CurrentPrice = selectedPrice,
+                PersonalPrice = p.Personal,
+                FamilyPrice = p.Family,
+                FamilyPlusPrice = p.FamilyPlus,
+                PassTypes = new[] { "Personal", "Family", "Family+" }
             };
+
             return View(vm);
         }
 
-        // POST: /ParkPasses/CreatePaymentIntent  (called by fetch from the view)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePaymentIntent([FromBody] PassPurchaseRequest req)
         {
-            if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.PassType))
+            if (string.IsNullOrWhiteSpace(req?.Email) || string.IsNullOrWhiteSpace(req?.PassType))
                 return BadRequest("Missing email or pass type.");
 
-            StripeConfiguration.ApiKey = _stripe.SecretKey;
+            var type = NormalizePassType(req.PassType);
+            if (type is null) return BadRequest("Unknown pass type.");
 
-            // If different pass types have different prices, map them here.
-            var (phase, basePrice) = GetPhasePrice();
-            var passTypeMultiplier = req.PassType switch
+            var prices = _pricing.GetCurrentPrices();
+            decimal selectedPrice = type switch
             {
-                "Personal" => 1.0m,
-                "Family" => 1.25m,
-                "Family+" => 1.6m,
-                _ => 1.0m
+                "Personal" => prices.Personal,
+                "Family" => prices.Family,
+                "Family+" => prices.FamilyPlus,
+                _ => prices.Personal
             };
-            var finalPrice = basePrice * passTypeMultiplier;          // decimal dollars
-            var amount = (long)Math.Round(finalPrice * 100M);          // cents
+            if (selectedPrice <= 0) return BadRequest("Price not available.");
+
+            // UPDATED rules: Personal=1/2, Family=2/4, Family+=2/7
+            var policy = GetPolicyFor(type);
+
+            StripeConfiguration.ApiKey = _stripe.SecretKey;
+            var amountCents = (long)Math.Round(selectedPrice * 100m, MidpointRounding.AwayFromZero);
 
             var options = new PaymentIntentCreateOptions
             {
-                Amount = amount,
+                Amount = amountCents,
                 Currency = "usd",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
-                {
-                    Enabled = true
-                },
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions { Enabled = true },
                 ReceiptEmail = req.Email,
+                Description = $"{type} Season Pass ({prices.SeasonName})",
                 Metadata = new Dictionary<string, string>
                 {
                     ["nnl_item"] = "SeasonPass",
-                    ["nnl_pass_type"] = req.PassType,
-                    ["nnl_phase"] = phase
+                    ["nnl_pass_type"] = type,
+                    ["nnl_season"] = prices.SeasonName,
+                    ["nnl_price_usd"] = selectedPrice.ToString("0.00"),
+                    ["nnl_policy_maxOwners"] = policy.MaxOwners.ToString(),
+                    ["nnl_policy_maxGuests"] = policy.MaxGuests.ToString()
                 }
             };
 
@@ -171,15 +119,37 @@ namespace NeverNeverLand.Controllers
             return Json(new { clientSecret = intent.ClientSecret });
         }
 
-        // GET: /ParkPasses/Success
+        private static string? NormalizePassType(string t)
+        {
+            var s = (t ?? "").Trim().ToLowerInvariant();
+            return s switch
+            {
+                "personal" => "Personal",
+                "family" => "Family",
+                "familyplus" => "Family+",
+                "family+" => "Family+",
+                _ => null
+            };
+        }
+
+        // Personal: 1 adult owner + 2 guests
+        // Family:   2 named adults + 4 guests
+        // Family+:  2 named adults + 7 guests
+        private static (int MaxOwners, int MaxGuests) GetPolicyFor(string type) =>
+            type switch
+            {
+                "Personal" => (1, 2),
+                "Family" => (2, 4),
+                "Family+" => (2, 7),
+                _ => (1, 2)
+            };
+
         public IActionResult Success() => View();
 
-        // DTO used by CreatePaymentIntent
         public class PassPurchaseRequest
         {
             public string PassType { get; set; } = "";
             public string Email { get; set; } = "";
         }
     }
-
 }

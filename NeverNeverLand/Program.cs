@@ -22,6 +22,8 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 
 builder.Services.AddScoped<IEmailService, SendGridEmailService>();
 
+builder.Services.AddSingleton<IPriceService, PriceService>();
+
 builder.Services.AddSession();
 
 var app = builder.Build();
