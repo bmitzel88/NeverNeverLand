@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Mvc;
-using NeverNeverLand.Models;
+using NeverNeverLand.Models.ViewModels;
 
 namespace NeverNeverLand.Controllers
 {
@@ -14,6 +15,11 @@ namespace NeverNeverLand.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+        
+        public IActionResult Attractions()
         {
             return View();
         }

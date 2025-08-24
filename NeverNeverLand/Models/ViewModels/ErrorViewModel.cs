@@ -1,4 +1,4 @@
-namespace NeverNeverLand.Models
+namespace NeverNeverLand.Models.ViewModels
 {
     public class ErrorViewModel
     {

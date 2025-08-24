@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Attractions";
+}
+
+<div class="container my-5">
+
+    <!-- Hero -->
+    <div class="position-relative overflow-hidden rounded-4 shadow-sm mb-4"
+         style="background:url('/images/attractions/banner-forest.jpg') center/cover; min-height:260px;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background:rgba(0,0,0,.35);"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-white text-center px-3">
+            <h1 class="display-6 fw-bold">Never Never Land Attractions</h1>
+            <p class="lead mb-0">Classic storybook fun brought back to life.</p>
+        </div>
+    </div>
+
+    <!-- Two Slides -->
+    <section class="my-4">
+        <h2 class="h4 mb-3">Featured Slides</h2>
+        <div class="row g-4">
+            <!-- Crooked Old Man’s House -->
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/crooked-house.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Crooked Old Man’s House maze and slide">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Maze & Slide</span>
+                        <h3 class="h5">Crooked Old Man’s House</h3>
+                        <p class="mb-0 text-muted">
+                            Wind your way through the crooked cottage maze, then swoop down the restored slide.
+                            A fan favorite that brings the nursery rhyme to life.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Old Woman’s Shoe -->
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/old-womans-shoe.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Old Woman’s Shoe slide">
+                    <div class="card-body">
+                        <span class="badge bg-warning text-dark mb-2">Slide</span>
+                        <h3 class="h5">Old Woman’s Shoe</h3>
+                        <p class="mb-0 text-muted">
+                            Climb into the famous shoe and race your friends down the slide—simple, timeless fun.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nursery Rhymes on Display -->
+    <section class="my-5">
+        <h2 class="h4 mb-3">Nursery Rhymes on Display</h2>
+        <p class="text-muted">
+            Explore classic figures and scenes throughout the park. Here are a few you’ll spot on your walk:
+        </p>
+
+        <div class="row g-4">
+            @* Use/duplicate these cards as needed; swap images & text *@
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/humpty-dumpty.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Humpty Dumpty figure">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Humpty Dumpty</h3>
+                        <p class="small text-muted mb-0">Perched on his wall—mind the fall!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/little-miss-muffet.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Little Miss Muffet display">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Little Miss Muffet</h3>
+                        <p class="small text-muted mb-0">Curds, whey—and a surprise visitor.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/old-woman-shoescene.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="There Was an Old Woman Who Lived in a Shoe display">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Old Woman Who Lived in a Shoe</h3>
+                        <p class="small text-muted mb-0">The scene that inspired the slide.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/cat-fiddle.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Hey Diddle Diddle display">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Hey Diddle Diddle</h3>
+                        <p class="small text-muted mb-0">Cow, moon, and a grinning cat.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/jack-jill.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Jack and Jill display">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Jack and Jill</h3>
+                        <p class="small text-muted mb-0">Pails up the hill—tumbles optional.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <img src="/images/attractions/baa-baa.jpg"
+                         class="card-img-top rounded-top-4"
+                         alt="Baa Baa Black Sheep display">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Baa Baa Black Sheep</h3>
+                        <p class="small text-muted mb-0">Three bags full on market day.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

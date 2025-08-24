@@ -54,6 +54,54 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+
+    // Ensure a default season
+    var defaultSeason = await db.Seasons
+        .FirstOrDefaultAsync(s => s.IsActive && s.AlwaysOn);
+    if (defaultSeason == null)
+    {
+        defaultSeason = new Season
+        {
+            Name = "Default",
+            AlwaysOn = true,
+            IsActive = true
+        };
+        db.Seasons.Add(defaultSeason);
+        await db.SaveChangesAsync();
+    }
+
+    // Upsert prices for simple types
+    async Task UpsertAsync(string admissionType, decimal amount, string currency = "USD")
+    {
+        var existing = await db.Prices
+            .Where(p => p.SeasonId == defaultSeason.Id && p.AdmissionType == admissionType && p.IsActive)
+            .ToListAsync();
+
+        foreach (var p in existing) p.IsActive = false;
+
+        db.Prices.Add(new Price
+        {
+            SeasonId = defaultSeason.Id,
+            AdmissionType = admissionType,
+            Amount = amount,
+            Currency = currency,
+            EffectiveStartUtc = DateTime.UtcNow,
+            IsActive = true
+        });
+    }
+
+    await UpsertAsync("Adult", 10.00m);
+    await UpsertAsync("Child", 5.00m);
+    await UpsertAsync("Infant", 0.00m);
+
+    await db.SaveChangesAsync();
+}
+
 app.Run();
 
 
