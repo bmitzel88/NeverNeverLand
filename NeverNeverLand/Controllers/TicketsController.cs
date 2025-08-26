@@ -39,16 +39,71 @@ namespace NeverNeverLand.Controllers
 
         // POST: Tickets/CreateCheckoutSession
         [HttpPost]
-        public IActionResult CreateCheckoutSession(string email, int adultQty, int childQty)
+        public async Task<IActionResult> CreateCheckoutSession(string email, int adultQty, int childQty)
         {
-
             if (string.IsNullOrEmpty(email) || (adultQty + childQty) == 0)
             {
                 ModelState.AddModelError("", "Please provide an email and select at least one ticket.");
-                return View("Buy"); // This will return users back to the Buy form with an error message
+                return View("Buy");
             }
 
+            // 1) Pick the season: prefer AlwaysOn; otherwise use the dated season covering today
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
+            var seasonId = await _context.Seasons
+                .Where(s => s.IsActive && s.AlwaysOn)
+                .Select(s => s.Id)
+                .FirstOrDefaultAsync();
+
+            if (seasonId == 0)
+            {
+                seasonId = await _context.Seasons
+                    .Where(s => s.IsActive &&
+                                s.StartDate <= today &&
+                                (s.EndDate == null || s.EndDate >= today))
+                    .OrderBy(s => s.StartDate)
+                    .Select(s => s.Id)
+                    .FirstOrDefaultAsync();
+
+                if (seasonId == 0)
+                {
+                    ModelState.AddModelError("", "No active season configured. Ask an admin to add one in Pricing Admin.");
+                    return View("Buy");
+                }
+            }
+
+            // 2) Fetch current active prices for Adult/Child
+            decimal adultPrice = 0m, childPrice = 0m;
+
+            if (adultQty > 0)
+            {
+                adultPrice = await _context.Prices
+                    .Where(p => p.SeasonId == seasonId && p.Item == "Adult" && p.IsActive)
+                    .OrderByDescending(p => p.EffectiveStartUtc)
+                    .Select(p => p.Amount)
+                    .FirstOrDefaultAsync();
+                if (adultPrice <= 0m)
+                {
+                    ModelState.AddModelError("", "Adult ticket price is not configured.");
+                    return View("Buy");
+                }
+            }
+
+            if (childQty > 0)
+            {
+                childPrice = await _context.Prices
+                    .Where(p => p.SeasonId == seasonId && p.Item == "Child" && p.IsActive)
+                    .OrderByDescending(p => p.EffectiveStartUtc)
+                    .Select(p => p.Amount)
+                    .FirstOrDefaultAsync();
+                if (childPrice < 0m) // allow 0 if you have free child tickets
+                {
+                    ModelState.AddModelError("", "Child ticket price is not configured.");
+                    return View("Buy");
+                }
+            }
+
+            // 3) Build Stripe line items from DB prices
             StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
 
             var lineItems = new List<SessionLineItemOptions>();
@@ -59,12 +114,9 @@ namespace NeverNeverLand.Controllers
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = 800,
+                        UnitAmount = (long)decimal.Round(adultPrice * 100m, 0, MidpointRounding.AwayFromZero),
                         Currency = "usd",
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = "Adult Ticket"
-                        }
+                        ProductData = new SessionLineItemPriceDataProductDataOptions { Name = "Adult Ticket" }
                     },
                     Quantity = adultQty
                 });
@@ -76,12 +128,9 @@ namespace NeverNeverLand.Controllers
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = 400,
+                        UnitAmount = (long)decimal.Round(childPrice * 100m, 0, MidpointRounding.AwayFromZero),
                         Currency = "usd",
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = "Child Ticket"
-                        }
+                        ProductData = new SessionLineItemPriceDataProductDataOptions { Name = "Child Ticket" }
                     },
                     Quantity = childQty
                 });
@@ -91,7 +140,7 @@ namespace NeverNeverLand.Controllers
             {
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = lineItems,
-                CustomerEmail = email, 
+                CustomerEmail = email,
                 Mode = "payment",
                 SuccessUrl = Url.Action("Success", "Tickets", null, Request.Scheme),
                 CancelUrl = Url.Action("Buy", "Tickets", null, Request.Scheme)
@@ -99,7 +148,6 @@ namespace NeverNeverLand.Controllers
 
             var service = new SessionService();
             var session = service.Create(options);
-
             return Redirect(session.Url);
         }
 

@@ -35,7 +35,7 @@ public class AdminController : Controller
                 .Include(p => p.Season)
                 .OrderByDescending(p => p.IsActive)
                 .ThenBy(p => p.Season.Name)
-                .ThenBy(p => p.AdmissionType)
+                .ThenBy(p => p.Item)
                 .ToListAsync()
         };
 
@@ -65,7 +65,7 @@ public class AdminController : Controller
                 .Include(p => p.Season)
                 .OrderByDescending(p => p.IsActive)
                 .ThenBy(p => p.Season.Name)
-                .ThenBy(p => p.AdmissionType)
+                .ThenBy(p => p.Item)
                 .ToListAsync();
 
             return View("Index", vm);
@@ -73,7 +73,7 @@ public class AdminController : Controller
 
         var current = await _db.Prices
             .Where(p => p.SeasonId == vm.SelectedSeasonId
-                     && p.AdmissionType == vm.SelectedAdmissionType
+                     && p.Item == vm.SelectedAdmissionType
                      && p.IsActive)
             .ToListAsync();
 
@@ -82,7 +82,7 @@ public class AdminController : Controller
         _db.Prices.Add(new Price
         {
             SeasonId = vm.SelectedSeasonId,
-            AdmissionType = vm.SelectedAdmissionType,
+            Item = vm.SelectedAdmissionType,
             Amount = vm.Amount,
             Currency = vm.Currency,
             EffectiveStartUtc = DateTime.UtcNow,

@@ -40,15 +40,20 @@ namespace NeverNeverLand.Data
             modelBuilder.Entity<Price>(e =>
             {
                 e.Property(p => p.Amount).HasColumnType("decimal(10,2)");
-                e.Property(p => p.AdmissionType).HasMaxLength(50);
-                e.Property(p => p.Channel).HasMaxLength(16);
                 e.Property(p => p.Currency).HasMaxLength(3);
+                e.Property(p => p.Kind).HasMaxLength(16);
+                e.Property(p => p.Item).HasMaxLength(64);
+                e.Property(p => p.Channel).HasMaxLength(16);
 
-                e.HasOne(p => p.Season).WithMany().HasForeignKey(p => p.SeasonId).OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(p => p.Season)
+                 .WithMany()
+                 .HasForeignKey(p => p.SeasonId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
-                
-                e.HasIndex(p => new { p.SeasonId, p.AdmissionType, p.Channel, p.IsActive });
+                // unique-ish index
+                e.HasIndex(p => new { p.SeasonId, p.Kind, p.Item, p.Channel, p.IsActive });
             });
+
 
             modelBuilder.Entity<PriceChangeLog>(e =>
             {

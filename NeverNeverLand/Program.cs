@@ -4,6 +4,7 @@ using NeverNeverLand.Data;
 using NeverNeverLand.Models;
 using NeverNeverLand.Services;
 using NeverNeverLand.Services.SendGridEmailService;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 
 builder.Services.AddScoped<IEmailService, SendGridEmailService>();
 
-builder.Services.AddSingleton<IPriceService, PriceService>();
+builder.Services.AddScoped<IPriceService, PriceService>();
 
 builder.Services.AddSession();
 
@@ -60,48 +61,64 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await db.Database.MigrateAsync();
 
-    // Ensure a default season
-    var defaultSeason = await db.Seasons
-        .FirstOrDefaultAsync(s => s.IsActive && s.AlwaysOn);
-    if (defaultSeason == null)
+    // --- SEASON SETUP ---
+    var seasons = new[]
     {
-        defaultSeason = new Season
+        new { Name = "Early Bird", Start = "01/01", End = "03/31", Discount = 0.15m },
+        new { Name = "Regular", Start = "04/01", End = "08/31", Discount = 0.00m },
+        new { Name = "Late", Start = "09/01", End = "10/31", Discount = 0.25m },
+        new { Name = "Off Season", Start = "11/01", End = "12/31", Discount = 1.00m } // 100% discount = off sale
+    };
+    int year = DateTime.UtcNow.Year;
+    var seasonEntities = new List<Season>();
+    foreach (var s in seasons)
+    {
+        var start = DateOnly.ParseExact($"{year}-{s.Start}", "yyyy-MM/dd", CultureInfo.InvariantCulture);
+        var end = DateOnly.ParseExact($"{year}-{s.End}", "yyyy-MM/dd", CultureInfo.InvariantCulture);
+        var existing = await db.Seasons.FirstOrDefaultAsync(se => se.Name == s.Name && se.StartDate == start && se.EndDate == end);
+        if (existing == null)
         {
-            Name = "Default",
-            AlwaysOn = true,
-            IsActive = true
-        };
-        db.Seasons.Add(defaultSeason);
-        await db.SaveChangesAsync();
+            existing = new Season { Name = s.Name, StartDate = start, EndDate = end, IsActive = true };
+            db.Seasons.Add(existing);
+            await db.SaveChangesAsync();
+        }
+        seasonEntities.Add(existing);
     }
 
-    // Upsert prices for simple types
-    async Task UpsertAsync(string admissionType, decimal amount, string currency = "USD")
+    // --- PRICING SETUP ---
+    var basePrices = new[]
     {
-        var existing = await db.Prices
-            .Where(p => p.SeasonId == defaultSeason.Id && p.AdmissionType == admissionType && p.IsActive)
-            .ToListAsync();
-
-        foreach (var p in existing) p.IsActive = false;
-
-        db.Prices.Add(new Price
+        new { Item = "Personal", Amount = 99.00m },
+        new { Item = "Family", Amount = 149.00m },
+        new { Item = "Family+", Amount = 199.00m }
+    };
+    foreach (var season in seasonEntities)
+    {
+        var discount = seasons.First(s => s.Name == season.Name).Discount;
+        foreach (var bp in basePrices)
         {
-            SeasonId = defaultSeason.Id,
-            AdmissionType = admissionType,
-            Amount = amount,
-            Currency = currency,
-            EffectiveStartUtc = DateTime.UtcNow,
-            IsActive = true
-        });
+            // Off Season: skip price creation (off sale)
+            if (discount == 1.00m) continue; 
+            var price = bp.Amount * (1 - discount); 
+            var existing = await db.Prices.FirstOrDefaultAsync(p => p.SeasonId == season.Id && p.Item == bp.Item && p.IsActive);
+            if (existing != null) existing.IsActive = false;
+            db.Prices.Add(new Price
+            {
+                SeasonId = season.Id,
+                Kind = "Pass",
+                Item = bp.Item,
+                Amount = price,
+                Currency = "USD",
+                Channel = "Online",
+                EffectiveStartUtc = DateTime.UtcNow,
+                IsActive = true
+            });
+        }
     }
-
-    await UpsertAsync("Adult", 10.00m);
-    await UpsertAsync("Child", 5.00m);
-    await UpsertAsync("Infant", 0.00m);
-
     await db.SaveChangesAsync();
 }
 
 app.Run();
+
 
 
