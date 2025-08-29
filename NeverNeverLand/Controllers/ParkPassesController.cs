@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NeverNeverLand.Data;
 using NeverNeverLand.Models;
+using NeverNeverLand.Models.ViewModels;
 using NeverNeverLand.Services;
 using Stripe;
 
@@ -28,41 +29,47 @@ namespace NeverNeverLand.Controllers
 
         public IActionResult Index()
         {
-            var p = _pricing.GetCurrentPrices();
+            var seasonName = _pricing.GetCurrentSeasonName();
+            var personalPrice = _pricing.GetCurrentPrices("Personal");
+            var familyPrice = _pricing.GetCurrentPrices("Family");
+            var familyPlusPrice = _pricing.GetCurrentPrices("Family+");
 
             var vm = new PassViewModel
             {
-                PhaseLabel = p.SeasonName,
+                PhaseLabel = seasonName,
                 Blurb = "Same benefits across all passes — coverage size is the only difference.",
-                CurrentPrice = p.Personal,
-                PersonalPrice = p.Personal,
-                FamilyPrice = p.Family,
-                FamilyPlusPrice = p.FamilyPlus
+                CurrentPrice = personalPrice,
+                PersonalPrice = personalPrice,
+                FamilyPrice = familyPrice,
+                FamilyPlusPrice = familyPlusPrice
             };
             return View(vm);
         }
 
         public IActionResult Buy(string type = "Personal")
         {
-            var p = _pricing.GetCurrentPrices();
+            var seasonName = _pricing.GetCurrentSeasonName();
+            var personalPrice = _pricing.GetCurrentPrices("Personal");
+            var familyPrice = _pricing.GetCurrentPrices("Family");
+            var familyPlusPrice = _pricing.GetCurrentPrices("Family+");
             var normalized = NormalizePassType(type) ?? "Personal";
 
             var selectedPrice = normalized switch
             {
-                "Family" => p.Family,
-                "Family+" => p.FamilyPlus,
-                _ => p.Personal
+                "Family" => familyPrice,
+                "Family+" => familyPlusPrice,
+                _ => personalPrice
             };
 
             var vm = new PassBuyViewModel
             {
-                PhaseLabel = p.SeasonName,
+                PhaseLabel = seasonName,
                 PublishableKey = _stripe.PublishableKey,
                 SelectedPassType = normalized,
                 CurrentPrice = selectedPrice,
-                PersonalPrice = p.Personal,
-                FamilyPrice = p.Family,
-                FamilyPlusPrice = p.FamilyPlus,
+                PersonalPrice = personalPrice,
+                FamilyPrice = familyPrice,
+                FamilyPlusPrice = familyPlusPrice,
                 PassTypes = new[] { "Personal", "Family", "Family+" }
             };
 
@@ -79,17 +86,19 @@ namespace NeverNeverLand.Controllers
             var type = NormalizePassType(req.PassType);
             if (type is null) return BadRequest("Unknown pass type.");
 
-            var prices = _pricing.GetCurrentPrices();
+            var seasonName = _pricing.GetCurrentSeasonName();
+            var personalPrice = _pricing.GetCurrentPrices("Personal");
+            var familyPrice = _pricing.GetCurrentPrices("Family");
+            var familyPlusPrice = _pricing.GetCurrentPrices("Family+");
             decimal selectedPrice = type switch
             {
-                "Personal" => prices.Personal,
-                "Family" => prices.Family,
-                "Family+" => prices.FamilyPlus,
-                _ => prices.Personal
+                "Personal" => personalPrice,
+                "Family" => familyPrice,
+                "Family+" => familyPlusPrice,
+                _ => personalPrice
             };
             if (selectedPrice <= 0) return BadRequest("Price not available.");
 
-            // UPDATED rules: Personal=1/2, Family=2/4, Family+=2/7
             var policy = GetPolicyFor(type);
 
             StripeConfiguration.ApiKey = _stripe.SecretKey;
@@ -101,12 +110,12 @@ namespace NeverNeverLand.Controllers
                 Currency = "usd",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions { Enabled = true },
                 ReceiptEmail = req.Email,
-                Description = $"{type} Season Pass ({prices.SeasonName})",
+                Description = $"{type} Season Pass ({seasonName})",
                 Metadata = new Dictionary<string, string>
                 {
                     ["nnl_item"] = "SeasonPass",
                     ["nnl_pass_type"] = type,
-                    ["nnl_season"] = prices.SeasonName,
+                    ["nnl_season"] = seasonName,
                     ["nnl_price_usd"] = selectedPrice.ToString("0.00"),
                     ["nnl_policy_maxOwners"] = policy.MaxOwners.ToString(),
                     ["nnl_policy_maxGuests"] = policy.MaxGuests.ToString()

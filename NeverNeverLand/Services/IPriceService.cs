@@ -1,9 +1,8 @@
 ﻿namespace NeverNeverLand.Services
 {
-    public record PassPrices(decimal Personal, decimal Family, decimal FamilyPlus, string SeasonName);
-
     public interface IPriceService
     {
-        PassPrices GetCurrentPrices(DateTime? nowUtc = null);
+        decimal GetCurrentPrices(string item, string channel = "Online", DateTime? nowUtc = null);
+        string GetCurrentSeasonName(DateTime? nowUtc = null);
     }
 }
