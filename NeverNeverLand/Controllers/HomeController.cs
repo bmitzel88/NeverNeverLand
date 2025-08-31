@@ -31,7 +31,7 @@ namespace NeverNeverLand.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Contact(ContactViewModel vm)
+        public IActionResult Contact(ContactViewModel vm)
         {
             // Basic honeypot check
             if (Request.Form.TryGetValue("Website", out var hp) && !string.IsNullOrWhiteSpace(hp))
