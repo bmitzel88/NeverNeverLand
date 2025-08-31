@@ -1,0 +1,51 @@
+@model IEnumerable<NeverNeverLand.Models.ViewModels.EventsViewModel>
+@using System.Linq
+@{
+    ViewData["Title"] = "Events";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow rounded-3">
+                <div class="card-body">
+                    <h2 class="card-title mb-1">Events</h2>
+                    <p class="text-muted mb-4">
+                        Special programs and activities are included with your park admission — no extra cost!
+                    </p>
+
+                    @if (Model == null || !Model.Any())
+                    {
+                        <div class="alert alert-info mb-0">No events posted yet. Please check back soon.</div>
+                    }
+                    else
+                    {
+                        <div class="row g-3">
+                            @foreach (var e in Model)
+                            {
+                                var meta = e.StartLocal.ToString("MMM d, yyyy • h:mm tt");
+                                if (e.EndLocal.HasValue) meta += " – " + e.EndLocal.Value.ToString("h:mm tt");
+                                if (!string.IsNullOrWhiteSpace(e.Location)) meta += " • " + e.Location;
+
+                                <div class="col-md-6">
+                                    <div class="card h-100 shadow-sm">
+                                        @if (!string.IsNullOrWhiteSpace(e.ImageUrl))
+                                        {
+                                            <img src="@e.ImageUrl" class="card-img-top" alt="@e.Title image">
+                                        }
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">@e.Title</h5>
+                                            <div class="small text-muted mb-2">@meta</div>
+                                            <p class="card-text flex-grow-1">@e.Description</p>
+                                            <span class="badge bg-success mt-auto">Free with Admission</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

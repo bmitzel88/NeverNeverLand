@@ -1,0 +1,68 @@
+@model NeverNeverLand.Models.ViewModels.ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <h2 class="card-title mb-1">Contact Us</h2>
+                    <p class="text-muted mb-4">Questions about tickets, passes, or the park? Send us a note.</p>
+
+                    <form asp-action="Contact" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Subject" class="form-label"></label>
+                            <input asp-for="Subject" class="form-control" />
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Message" class="form-label"></label>
+                            <textarea asp-for="Message" rows="6" class="form-control"></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+
+                        <!-- Honeypot -->
+                        <input type="text" name="Website" class="d-none" autocomplete="off" />
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" asp-for="AgreeToPrivacy" />
+                            <label class="form-check-label" asp-for="AgreeToPrivacy">
+                                I agree to the <a asp-controller="Home" asp-action="Privacy">Privacy Policy</a>.
+                            </label>
+                            <span asp-validation-for="AgreeToPrivacy" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+
+                        @if (TempData["ContactSuccess"] as string is not null)
+                        {
+                            <div class="alert alert-success mt-3 mb-0">@TempData["ContactSuccess"]</div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
