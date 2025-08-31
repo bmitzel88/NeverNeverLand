@@ -24,11 +24,12 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive rounded shadow-sm border">
-                    <table class="table align-middle table-hover mb-0">
+                    <table class="table align-middle table-hover mb-0 nnl-pass-table">
                         <thead class="table-light">
                             <tr>
                                 <th class="text-start">Pass Type</th>
                                 <th class="text-center">Current Price</th>
+                                <th class="text-center">Named Adults</th>
                                 <th class="text-center">Covers</th>
                                 <th class="text-start">Benefits</th>
                             </tr>
@@ -37,7 +38,6 @@
                             <tr>
                                 <td class="text-start">
                                     <span class="badge bg-primary me-2">Personal</span>
-                                    <strong>Personal</strong>
                                 </td>
                                 <td class="text-center">@Model.PersonalPrice.ToString("C")</td>
                                 <td class="text-center">1 named adult</td>
@@ -47,7 +47,6 @@
                             <tr>
                                 <td class="text-start">
                                     <span class="badge bg-success me-2">Family</span>
-                                    <strong>Family</strong>
                                 </td>
                                 <td class="text-center">@Model.FamilyPrice.ToString("C")</td>
                                 <td class="text-center">Up to 2 named adults</td>
@@ -57,7 +56,6 @@
                             <tr>
                                 <td class="text-start">
                                     <span class="badge bg-warning text-dark me-2">Family+</span>
-                                    <strong>Family+</strong>
                                 </td>
                                 <td class="text-center">@Model.FamilyPlusPrice.ToString("C")</td>
                                 <td class="text-center">Up to 2 named adults</td>
@@ -226,6 +224,7 @@
             <h3 class="mb-3">FAQ</h3>
             <div class="mb-2"><strong>When does my pass start?</strong><br />Immediately upon purchase, through Oct 31.</div>
             <div class="mb-2"><strong>Do I need tickets if I have a pass?</strong><br />No—just show your pass and ID at entry.</div>
+            <div class="mb-2"><strong>What does the term "Named Adults" mean?</strong><br />The adult the pass is tied to.</div>
             <div class="mb-0"><strong>Can I upgrade later?</strong><br />Yes—visit Guest Services to upgrade within the same season.</div>
         </div>
     </div>

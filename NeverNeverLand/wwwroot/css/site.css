@@ -1,16 +1,16 @@
-/* === Global Layout Reset === */
+/* =========================
+   Global Layout Reset
+========================= */
 html, body {
     height: 100%;
     margin: 0;
 }
 
-/* === Base Flex Layout for Sticky Footer === */
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-
-    /*Forest background image*/
+    /* Forest background */
     background-image: url('/images/background-forest.png');
     background-size: cover;
     background-position: center;
@@ -22,126 +22,155 @@ main {
     flex: 1;
 }
 
-footer,
-.footer {
-    position: static !important; /* kill sticky/fixed */
+footer, .footer {
+    position: static !important;
     bottom: auto !important;
 }
 
-/* === Header & Footer Styling === */
-header, footer {
-    background-color: #f8f9fa; /* Light gray background */
+/* Footer always white background */
+.footer-white {
+    background-color: #ffffff !important;
 }
 
-/* === Card Component Styling (Modern Container Box) === */
+/* =========================
+   Theme Variables
+========================= */
+:root {
+    --util-bg: #0a6a75; /* lighter header bar (under logo too) */
+    --nav-bg: #203a36; /* darker main nav bar */
+    --util-h: 72px; /* utility bar height (match your logo height) */
+    --nav-h: 52px; /* main nav height */
+    --logo-overlay-w: 240px; /* width of light strip under logo */
+}
+
+/* =========================
+   Header + Navigation
+========================= */
+.nnl-header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+/* Utility bar with logo + CTAs */
+.utility-bar {
+    background: var(--util-bg);
+    min-height: var(--util-h);
+    position: relative;
+}
+
+    /* Create the lighter strip that extends under the logo */
+    .utility-bar::after {
+        content: "";
+        position: absolute;
+        top: 100%; /* directly under utility bar */
+        left: 0; /* from left edge of viewport */
+        height: var(--nav-h); /* same height as main nav */
+        width: var(--logo-overlay-w); /* control the width ONCE */
+        background: var(--util-bg);
+        z-index: 2; /* above the dark nav background */
+        pointer-events: none;
+    }
+
+/* Main nav */
+.main-nav {
+    background: var(--nav-bg);
+    min-height: var(--nav-h);
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    border: 0;
+}
+
+    /* Shift nav items so they start right after the light strip */
+    .main-nav .navbar-collapse {
+        margin-left: var(--logo-overlay-w);
+    }
+
+/* Reset margin on mobile so collapsed menu aligns normally */
+@media (max-width: 991.98px) {
+    .main-nav .navbar-collapse {
+        margin-left: 0;
+    }
+}
+
+/* Nav link colors */
+.main-nav .nav-link {
+    color: #fff !important;
+    opacity: .95;
+}
+
+    .main-nav .nav-link:hover {
+        color: #a7f3d0 !important;
+        opacity: 1;
+    }
+
+/* =========================
+   Utility Bar Buttons (original colors + white text)
+========================= */
+.utility-bar .btn {
+    border: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    color: #fff !important; /* force white text */
+}
+
+    .utility-bar .btn:hover {
+        opacity: 0.85;
+        text-decoration: none;
+    }
+
+/* Original palette backgrounds */
+.btn-ticket {
+    background-color: #f0c33c;
+}
+/* Mother Goose yellow */
+.btn-parkpass {
+    background-color: #6bbde4;
+}
+/* Light blue */
+.btn-gifts {
+    background-color: #d13b3b;
+}
+/* Book red */
+.btn-logout {
+    background-color: #d4b052;
+}
+/* Golden yellow */
+
+/* =========================
+   Cards & Components
+========================= */
 .card {
-    background-color: #ffffff; /* White background */
-    border-radius: 1rem; /* Rounded corners */
+    background-color: #fff;
+    border-radius: 1rem;
 }
 
-/* === Primary Button Styling (Stripe Checkout, etc.) === */
+/* Primary button (site-wide) */
 .btn-primary {
-    background-color: #005eb8; /* Blue color */
+    background-color: #005eb8;
     border-color: #005eb8;
 }
 
     .btn-primary:hover {
-        background-color: #004999; /* Darker blue on hover */
+        background-color: #004999;
     }
 
-/* === Table Styling: Prevent Highlighting in Ticket Table === */
+/* Prevent text highlighting in ticket table */
 .nnl-ticket-table td,
 .nnl-ticket-table th {
-    user-select: none; /* Prevents text from being selected */
-    cursor: default; /* Keeps the normal arrow cursor */
+    user-select: none;
+    cursor: default;
 }
 
-/* === Global Font Styling === */
+/* Global font styling */
 body, .nav-main {
-    font-family: Georgia, sans-serif; /* Classic serif font */
-    font-weight: 700; /* Bold for better readability */
+    font-family: Georgia, sans-serif;
+    font-weight: 700;
 }
 
-/* === Custom Button Colors === */
-.btn-ticket {
-    background-color: #a6ce39; /* Light green */
-    color: black;
-    
-}
-
-/* === Fix: Prevent Highlighting text === */
-.fix-highlight-text {
-    user-select: none; /* Prevents text from being selected */
-    cursor: default; /* Keeps the normal arrow cursor */
-}
-
-.btn-parkpass {
-    background-color: #72cce3; /* Light blue */
-    color: black;
-}
-
-/* Brand/logo text */
-.navbar-brand {
-    color: white !important;
-}
-
-/* Navigation links */
-.navbar-nav .nav-link {
-    color: white !important;
-}
-
-    .navbar-nav .nav-link:hover {
-        color: #ffdd55 !important; /* Yellow accent */
-    }
-
-/* Top right buttons */
-.btn-tickets {
-    background-color: #f0c33c; /* Mother Goose yellow */
-    color: black;
-}
-
-.btn-parkpass {
-    background-color: #6bbde4; /* Light blue */
-    color: white;
-}
-
-.btn-gifts {
-    background-color: #d13b3b; /* Book red */
-    color: white;
-}
-
-.btn-logout {
-    background-color: #d4b052; /* Golden yellow from bottom book */
-    color: black;
-}
-
-/* Slight shadow for depth */
-.btn-tickets, .btn-parkpass, .btn-gifts, .btn-logout {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* === General Button Hover Effect === */
-.btn:hover {
-    opacity: 0.85; /* Slight transparency */
-    text-decoration: none; /* Removes underline */
-}
-
-/* === Navigation Styling === */
-.nav .nav-link.nav-main {
-    color: #1a1a1a; /* Dark text */
-    margin: 0 10px;
-    font-size: 16px;
-}
-
-    .nav .nav-link.nav-main:hover {
-        text-decoration: underline; /* Adds underline on hover */
-    }
-
-
-/* === Tickets Styling === */
-
-/* Tickets page surface */
+/* =========================
+   Ticket Page Styles
+========================= */
 .ticket-surface {
     background: rgba(255, 255, 255, 0.92);
     border-radius: 1rem;
@@ -166,8 +195,49 @@ body, .nav-main {
     }
 }
 
-/* keep table readable on the card */
 .ticket-surface .table {
     margin-bottom: 0;
     background: transparent;
+}
+
+/* =========================
+   Park Pass Page Styles
+========================= */
+
+/* Park Pass pricing table */
+.nnl-pass-table {
+    border-radius: .75rem; /* rounded outer corners */
+    overflow: hidden; /* keep the radius on thead corners */
+    border: 1px solid rgba(0,0,0,.125); /* ensure visible outer border */
+}
+
+    /* make sure cell borders show on all sides */
+    .nnl-pass-table th,
+    .nnl-pass-table td {
+        border-right: 1px solid rgba(0,0,0,.125);
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+
+    /* keep header bottom rule slightly stronger */
+    .nnl-pass-table thead th {
+        border-bottom-width: 2px;
+    }
+
+    /* optional: consistent white cell background inside translucent cards */
+    .nnl-pass-table th,
+    .nnl-pass-table td {
+        background-color: #fff;
+    }
+
+
+
+/* =========================
+   Mobile Adjustments
+========================= */
+@media (max-width: 576px) {
+    :root {
+        --util-h: 60px;
+        --nav-h: 48px;
+        --logo-overlay-w: 180px;
+    }
 }
