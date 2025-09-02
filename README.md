@@ -35,7 +35,7 @@ To maintain security and avoid abuse, this codebase is kept private. However, ge
 
 ## 🌐 Technologies Used
 
-- ASP.NET Core MVC (.NET 6+)
+- ASP.NET Core MVC (.NET 8+)
 - Entity Framework Core
 - Microsoft Identity (Individual Accounts)
 - Razor Pages / Bootstrap 5
@@ -48,11 +48,18 @@ To maintain security and avoid abuse, this codebase is kept private. However, ge
 🛠️ **In Development**  
 The website is currently being built and tested. Future updates will include:
 
-- Membership system
-- Tickets system
 - Gift shop
-- Event management
+- Upgraded event management
 - Park map and gallery
+
+Completed updates:
+
+- Park Pass system
+- Tickets System
+- Member Portal
+- Admin Portal
+- Home page(s)
+- Stripe integration
 
 ---
 
@@ -60,6 +67,6 @@ The website is currently being built and tested. Future updates will include:
 
 For questions, collaborations, or historical contributions to the Never Never Land revival project:
 
-📧 Email: [brandonmitzel05@gmail.com](mailto:brandonmitzel05@gmail.com)
+📧 Email: [support@neverneverlandpark.com(mailto:support@neverneverlandpark.com)
 
 ---
