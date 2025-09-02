@@ -15,13 +15,15 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header class="nnl-header sticky-top">
-        <!-- Utility Bar -->
-        <div class="utility-bar d-flex align-items-center gap-2 px-3">
+        <!-- Logo sits above both bars, overlapping -->
+        <div class="logo-stack-wrap">
             <a href="/" class="brand d-inline-flex align-items-center text-decoration-none" aria-label="Never Never Land">
-                <img src="/images/nnl-logo-vertical.png" alt="Never Never Land" style="height:72px;" />
+                <img src="/images/nnl-logo-vertical.png" alt="Never Never Land" style="height:104px; width:98px;"/>
                 <span class="visually-hidden">Never Never Land</span>
             </a>
-
+        </div>
+        <!-- Utility Bar -->
+        <div class="utility-bar d-flex align-items-center gap-2 px-3">
             <nav aria-label="Quick actions" class="d-flex align-items-center gap-2 ms-auto">
                 <a href="/Tickets" class="btn btn-ticket px-3">TICKETS</a>
                 <a href="/ParkPasses" class="btn btn-parkpass px-3">PARK PASS</a>
@@ -38,7 +40,6 @@
                 }
             </nav>
         </div>
-
         <!-- Main Nav -->
         <nav class="navbar navbar-expand-lg main-nav" aria-label="Main navigation">
             <div class="container-fluid px-3">

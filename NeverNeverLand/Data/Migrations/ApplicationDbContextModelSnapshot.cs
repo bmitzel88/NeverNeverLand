@@ -260,7 +260,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParkPass");
+                    b.ToTable("ParkPass", (string)null);
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Price", b =>
@@ -310,7 +310,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasIndex("SeasonId", "Kind", "Item", "Channel", "IsActive");
 
-                    b.ToTable("Prices");
+                    b.ToTable("Prices", (string)null);
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.PriceChangeLog", b =>
@@ -349,7 +349,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PriceChangeLogs");
+                    b.ToTable("PriceChangeLogs", (string)null);
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Season", b =>
@@ -381,7 +381,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasIndex("IsActive", "AlwaysOn", "StartDate", "EndDate");
 
-                    b.ToTable("Seasons");
+                    b.ToTable("Seasons", (string)null);
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Ticket", b =>
@@ -427,7 +427,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("Ticket");
+                    b.ToTable("Ticket", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

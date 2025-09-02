@@ -20,11 +20,111 @@ namespace NeverNeverLand.Controllers
             return View();
         }
 
+        // List page
+        public IActionResult Attractions() => View();
+
+        // Detail page
         [HttpGet]
-        public IActionResult Attractions(string? id)
+        public IActionResult Attraction(string id)
         {
-            return View();
+            var map = GetAttractions();
+            if (string.IsNullOrWhiteSpace(id)) return RedirectToAction(nameof(Attractions));
+
+            id = id.ToLowerInvariant();
+            if (!map.TryGetValue(id, out var vm)) return NotFound();
+
+            return View(vm);
         }
+
+        // In-memory content for the 4 opening locations
+        private static Dictionary<string, AttractionDetailViewModel> GetAttractions()
+        {
+            return new Dictionary<string, AttractionDetailViewModel>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["stage"] = new AttractionDetailViewModel
+                {
+                    Slug = "stage",
+                    Title = "Stage",
+                    Lead = "Live storytime, character shows, and performances.",
+                    Description = "Our outdoor forest stage hosts short, family-friendly shows throughout the day. Seating is bench-style; feel free to come and go between scenes.",
+                    LocationNote = "Near the main entrance.",
+                    AccessibilityNote = "Bench seating with space for mobility devices at front rows. Music plays during shows.",
+                    Highlights = new()
+                {
+                    "Storytime and sing-alongs",
+                    "Character meet & waves after select shows",
+                    "Shade from surrounding evergreens"
+                },
+                    ImageUrls = new()
+                {
+                    "/images/stage.png",
+                    "/images/attractions/stage-2.jpg"
+                }
+                },
+                ["the-shoe"] = new AttractionDetailViewModel
+                {
+                    Slug = "the-shoe",
+                    Title = "The Shoe",
+                    Lead = "Walk-through scene from “Old Woman Who Lived in a Shoe.”",
+                    Description = "Step up and peek inside the giant hillside shoe. It’s a playful photo spot and a quick slide for little ones.",
+                    LocationNote = "Along the central path.",
+                    AccessibilityNote = "Stairs and a short slide; scene viewable from ground level.",
+                    Highlights = new()
+                {
+                    "Classic nursery-rhyme vignette",
+                    "Quick kid-friendly slide",
+                    "Great photo backdrop"
+                },
+                    ImageUrls = new()
+                {
+                    "/images/shoe.png",
+                    "/images/attractions/shoe-2.jpg"
+                }
+                },
+                ["crooked-old-man"] = new AttractionDetailViewModel
+                {
+                    Slug = "crooked-old-man",
+                    Title = "The Crooked Old Man’s House",
+                    Lead = "Peek inside the crooked little house from the classic rhyme.",
+                    Description = "A whimsical, off-kilter cottage with a small slide on the side. Notice the quirky angles and crooked trim!",
+                    LocationNote = "Forest loop, just past the shoe.",
+                    AccessibilityNote = "Stairs to slide; scene viewable from path.",
+                    Highlights = new()
+                {
+                    "Crooked cottage details",
+                    "Small slide for kids",
+                    "Shaded seating nearby"
+                },
+                    ImageUrls = new()
+                {
+                    "/images/crooked.png",
+                    "/images/attractions/crooked-2.jpg"
+                }
+                },
+                ["storybook-trail"] = new AttractionDetailViewModel
+                {
+                    Slug = "storybook-trail",
+                    Title = "Storybook Trail",
+                    Lead = "Forest path featuring the rest of our nursery rhymes.",
+                    Description = "Follow the gentle path through the trees to discover classic rhymes brought to life in small scenes and plaques.",
+                    LocationNote = "Begins near the Stage and loops through the woods.",
+                    AccessibilityNote = "Packed-gravel path with gentle grades. Benches along the route.",
+                    Highlights = new()
+                {
+                    "Dozens of rhyme moments",
+                    "Quiet nature walk",
+                    "Benches and photo stops"
+                },
+                    ImageUrls = new()
+                {
+                    "/images/forest-trail.png",
+                    "/images/attractions/trail-2.jpg",
+                    "/images/attractions/trail-3.jpg"
+                }
+                }
+            };
+        }
+
 
         [HttpGet]
         public IActionResult Contact() {

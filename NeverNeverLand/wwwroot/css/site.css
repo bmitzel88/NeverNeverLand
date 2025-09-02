@@ -61,6 +61,7 @@ footer, .footer {
     background: var(--util-bg);
     min-height: var(--util-h);
     position: relative;
+    padding-left: 120px; /* match new logo-stack-wrap width */
 }
 
     /* Create the lighter strip that extends under the logo */
@@ -88,13 +89,25 @@ footer, .footer {
 
     /* Shift nav items so they start right after the light strip */
     .main-nav .navbar-collapse {
-        margin-left: var(--logo-overlay-w);
+        margin-left: 270px; /* move nav closer to logo */
     }
 
 /* Reset margin on mobile so collapsed menu aligns normally */
 @media (max-width: 991.98px) {
+    .utility-bar {
+        padding-left: 0;
+    }
     .main-nav .navbar-collapse {
-        margin-left: 0;
+        margin-left: 110px;
+    }
+    .logo-stack-wrap {
+        width: 80px;
+    }
+    .logo-stack-wrap img {
+        width: 80px;
+        height: 90px;
+        left: 6px;
+        transform: translateY(4px);
     }
 }
 
@@ -418,4 +431,24 @@ body, .nav-main {
     .nnl-gallery {
         height: 140px;
     }
+}
+
+/* =========================
+   Logo Overlap Adjustment
+========================= */
+.logo-stack-wrap {
+    position: relative;
+    z-index: 1050;
+    width: 120px; /* reduced from 152px to move logo right */
+    height: 0;
+}
+
+.logo-stack-wrap img {
+    position: absolute;
+    left: 12px; /* move logo a bit right */
+    top: 0;
+    height: 104px;
+    width: 98px;
+    z-index: 1050;
+    transform: translateY(8px); /* adjust for desired overlap */
 }
