@@ -151,8 +151,40 @@ namespace NeverNeverLand.Controllers
             return Redirect(session.Url);
         }
 
-        public IActionResult Success()
+        public async Task<IActionResult> Success()
         {
+            // Save ticket(s) for the logged-in user after successful payment
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            if (user == null)
+                return Challenge();
+
+            // Get current season end date
+            var now = DateTime.UtcNow;
+            var season = await _context.Seasons
+                .Where(s => s.IsActive &&
+                    ((s.StartDate == null || s.StartDate.Value.ToDateTime(TimeOnly.MinValue) <= now) &&
+                     (s.EndDate == null || s.EndDate.Value.ToDateTime(TimeOnly.MinValue) >= now)))
+                .OrderBy(s => s.StartDate)
+                .FirstOrDefaultAsync();
+            var seasonEnd = season?.EndDate?.ToDateTime(TimeOnly.MinValue) ?? new DateTime(now.Year, 10, 31);
+
+            // For demo: create a single ticket. In production, you should know the quantity/type from session or payment metadata.
+            var ticket = new Ticket
+            {
+                UserId = user.Id,
+                HolderName = user.UserName ?? "Member",
+                HolderAge = 0, // Set appropriately if you collect this info
+                AdmissionType = "Adult", // Or "Child" as appropriate
+                PricePaid = 20.00m, // Set from purchase
+                Currency = "USD",
+                PurchaseDate = now,
+                ExpirationDate = seasonEnd, // Always set to last day of season
+                IsUsed = false
+            };
+
+            _context.Ticket.Add(ticket);
+            await _context.SaveChangesAsync();
+
             return View(); // Basic thank-you page
         }
 
@@ -162,7 +194,7 @@ namespace NeverNeverLand.Controllers
         //
 
 
-        // GET: Ticket Management (Admin Only)
+        // GET: Ticket Management (Mostly Admin Only)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Manage()
         {
@@ -170,7 +202,6 @@ namespace NeverNeverLand.Controllers
         }
 
         // GET: Tickets/Details/1
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

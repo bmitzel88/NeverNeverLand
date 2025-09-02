@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NeverNeverLand.Data;
 
@@ -11,9 +12,11 @@ using NeverNeverLand.Data;
 namespace NeverNeverLand.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250902000112_AddUserIdToParkPass")]
+    partial class AddUserIdToParkPass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,7 +263,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParkPass", (string)null);
+                    b.ToTable("ParkPass");
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Price", b =>
@@ -310,7 +313,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasIndex("SeasonId", "Kind", "Item", "Channel", "IsActive");
 
-                    b.ToTable("Prices", (string)null);
+                    b.ToTable("Prices");
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.PriceChangeLog", b =>
@@ -349,7 +352,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PriceChangeLogs", (string)null);
+                    b.ToTable("PriceChangeLogs");
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Season", b =>
@@ -381,7 +384,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasIndex("IsActive", "AlwaysOn", "StartDate", "EndDate");
 
-                    b.ToTable("Seasons", (string)null);
+                    b.ToTable("Seasons");
                 });
 
             modelBuilder.Entity("NeverNeverLand.Models.Ticket", b =>
@@ -427,7 +430,7 @@ namespace NeverNeverLand.Data.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("Ticket", (string)null);
+                    b.ToTable("Ticket");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

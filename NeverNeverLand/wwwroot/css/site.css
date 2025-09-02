@@ -41,6 +41,10 @@ footer, .footer {
     --util-h: 72px; /* utility bar height (match your logo height) */
     --nav-h: 52px; /* main nav height */
     --logo-overlay-w: 240px; /* width of light strip under logo */
+    /* Build-Journal additions (used by Home/Index only) */
+    --brand: #44BC98; /* accent for progress, badges, CTAs */
+    --brand-dark: #0E4767; /* deep band backgrounds */
+    --alt: #f4f8f7; /* soft section bg */
 }
 
 /* =========================
@@ -57,6 +61,7 @@ footer, .footer {
     background: var(--util-bg);
     min-height: var(--util-h);
     position: relative;
+    padding-left: 120px; /* match new logo-stack-wrap width */
 }
 
     /* Create the lighter strip that extends under the logo */
@@ -84,13 +89,25 @@ footer, .footer {
 
     /* Shift nav items so they start right after the light strip */
     .main-nav .navbar-collapse {
-        margin-left: var(--logo-overlay-w);
+        margin-left: 270px; /* move nav closer to logo */
     }
 
 /* Reset margin on mobile so collapsed menu aligns normally */
 @media (max-width: 991.98px) {
+    .utility-bar {
+        padding-left: 0;
+    }
     .main-nav .navbar-collapse {
-        margin-left: 0;
+        margin-left: 110px;
+    }
+    .logo-stack-wrap {
+        width: 80px;
+    }
+    .logo-stack-wrap img {
+        width: 80px;
+        height: 90px;
+        left: 6px;
+        transform: translateY(4px);
     }
 }
 
@@ -203,33 +220,197 @@ body, .nav-main {
 /* =========================
    Park Pass Page Styles
 ========================= */
-
-/* Park Pass pricing table */
 .nnl-pass-table {
     border-radius: .75rem; /* rounded outer corners */
     overflow: hidden; /* keep the radius on thead corners */
     border: 1px solid rgba(0,0,0,.125); /* ensure visible outer border */
 }
 
-    /* make sure cell borders show on all sides */
     .nnl-pass-table th,
     .nnl-pass-table td {
         border-right: 1px solid rgba(0,0,0,.125);
         border-bottom: 1px solid rgba(0,0,0,.125);
+        background-color: #fff; /* consistent white inside translucent cards */
     }
 
-    /* keep header bottom rule slightly stronger */
     .nnl-pass-table thead th {
         border-bottom-width: 2px;
     }
 
-    /* optional: consistent white cell background inside translucent cards */
-    .nnl-pass-table th,
-    .nnl-pass-table td {
-        background-color: #fff;
+/* =========================================================
+   Home/Index Styles — Build Journal (years-long progress)
+   (Only adds NEW classes; does NOT override existing ones)
+========================================================= */
+
+/* Brand helpers for this page */
+.btn-brand {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+}
+
+    .btn-brand:hover {
+        filter: brightness(.96);
+        color: #fff;
     }
 
+.btn-ghost {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.6);
+}
 
+    .btn-ghost:hover {
+        background: rgba(255,255,255,.15);
+        color: #fff;
+    }
+
+.bg-brand {
+    background: var(--brand) !important;
+}
+
+.bg-brand-soft {
+    background: rgba(68,188,152,.12) !important;
+}
+
+.text-brand {
+    color: var(--brand) !important;
+}
+
+.pt-section-alt {
+    background: var(--alt);
+}
+/* light section background */
+
+/* Hero */
+.nnl-hero {
+    min-height: 520px;
+    position: relative;
+}
+
+.nnl-hero-img {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    display: block;
+}
+
+.nnl-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.33), rgba(0,0,0,.55));
+}
+/* “Latest” bar that hugs the bottom of the hero */
+.nnl-latest-strip {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
+    padding: 1rem 0 1.25rem;
+}
+
+/* Quick stats */
+.nnl-stat {
+    padding: .75rem 1rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.05);
+    border-radius: .75rem;
+    box-shadow: 0 .25rem .75rem rgba(0,0,0,.04);
+}
+
+.nnl-stat-label {
+    font-size: .75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.nnl-stat-value {
+    font-weight: 600;
+}
+
+/* Timeline */
+.nnl-timeline {
+    position: relative;
+    margin-left: .5rem;
+    padding-left: 1.25rem;
+}
+
+    .nnl-timeline::before {
+        content: "";
+        position: absolute;
+        left: .25rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: rgba(0,0,0,.08);
+    }
+
+.nnl-tl-item {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.nnl-tl-dot {
+    position: absolute;
+    left: -.35rem;
+    top: .9rem;
+    width: .75rem;
+    height: .75rem;
+    border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 0 3px rgba(68,188,152,.18);
+}
+
+.nnl-tl-card {
+    border-radius: .75rem;
+}
+
+/* Gallery thumbnails */
+.nnl-gallery {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: .75rem;
+    box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
+}
+
+/* Documents list */
+.nnl-docicon {
+    flex: 0 0 44px;
+    height: 44px;
+    border-radius: .5rem;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Shared utilities for the page */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+    .card-link:hover {
+        box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.12) !important;
+    }
+
+.nnl-newsletter {
+    background: linear-gradient(120deg, var(--brand-dark), #08324a);
+    color: #fff;
+}
+
+.rounded-top-4 {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.text-white-75 {
+    color: rgba(255,255,255,.75) !important;
+}
 
 /* =========================
    Mobile Adjustments
@@ -240,4 +421,34 @@ body, .nav-main {
         --nav-h: 48px;
         --logo-overlay-w: 180px;
     }
+
+    .nnl-hero,
+    .nnl-hero-img {
+        min-height: 420px;
+        height: 420px;
+    }
+
+    .nnl-gallery {
+        height: 140px;
+    }
+}
+
+/* =========================
+   Logo Overlap Adjustment
+========================= */
+.logo-stack-wrap {
+    position: relative;
+    z-index: 1050;
+    width: 120px; /* reduced from 152px to move logo right */
+    height: 0;
+}
+
+.logo-stack-wrap img {
+    position: absolute;
+    left: 12px; /* move logo a bit right */
+    top: 0;
+    height: 104px;
+    width: 98px;
+    z-index: 1050;
+    transform: translateY(8px); /* adjust for desired overlap */
 }

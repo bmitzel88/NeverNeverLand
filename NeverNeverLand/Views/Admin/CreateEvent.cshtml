@@ -1,0 +1,29 @@
+@model NeverNeverLand.Models.ViewModels.EventsViewModel
+@{
+    ViewData["Title"] = "Create Event";
+}
+<h1>Create Event</h1>
+<form asp-action="CreateEvent" method="post">
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Start</label>
+        <input asp-for="StartLocal" type="datetime-local" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>End</label>
+        <input asp-for="EndLocal" type="datetime-local" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Location</label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Events" class="btn btn-secondary">Cancel</a>
+</form>

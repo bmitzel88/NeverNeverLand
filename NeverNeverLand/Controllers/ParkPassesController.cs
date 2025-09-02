@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NeverNeverLand.Data;
 using NeverNeverLand.Models;
@@ -153,7 +154,45 @@ namespace NeverNeverLand.Controllers
                 _ => (1, 2)
             };
 
-        public IActionResult Success() => View();
+        public async Task<IActionResult> Success()
+        {
+            // Save a new ParkPass for the logged-in user after successful payment
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            if (user == null)
+                return Challenge();
+
+            // For demo: create a Personal pass for the current season. In production, use session/payment data for type, season, etc.
+            var now = DateTime.UtcNow;
+            var pass = new ParkPass
+            {
+                UserId = user.Id,
+                Type = "Personal", // Set from purchase
+                SeasonYear = now.Year,
+                ExpiresAt = new DateTime(now.Year, 10, 31), // End of season
+                Status = "Active",
+                QrToken = Guid.NewGuid().ToString("N"),
+                MaxOwners = 1,
+                MaxGuests = 2
+                
+            };
+
+            _context.ParkPass.Add(pass);
+            await _context.SaveChangesAsync();
+
+            return View();
+        }
+
+        public async Task<IActionResult> Manage()
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            if (user == null) return Challenge();
+            var pass = await _context.ParkPass
+                .Where(p => p.UserId == user.Id && p.Status == "Active")
+                .OrderByDescending(p => p.ExpiresAt)
+                .FirstOrDefaultAsync();
+            if (pass == null) return NotFound();
+            return View(pass);
+        }
 
         public class PassPurchaseRequest
         {

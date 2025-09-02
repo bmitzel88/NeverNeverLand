@@ -1,0 +1,330 @@
+﻿@model NeverNeverLand.Models.ViewModels.VisitViewModel
+@{
+    ViewData["Title"] = "Plan Your Visit";
+    string todayHours = Model?.TodayHoursText ?? "10:00 AM – 6:00 PM";
+    bool isOpen = Model?.IsOpen ?? true;
+    string parkStatus = isOpen ? "Open" : "Closed";
+    string statusClass = isOpen ? "text-success" : "text-danger";
+
+    decimal? ticketFrom = Model?.TicketPriceFrom;
+    decimal? passFrom = Model?.PassPriceFrom;
+
+    var events = Model?.UpcomingEvents?.Take(3) ?? Enumerable.Empty<NeverNeverLand.Models.ViewModels.EventSummary>();
+    string address = Model?.ParkAddress ?? "123 Evergreen Way, Tacoma, WA 98407";
+}
+
+
+<section class="position-relative overflow-hidden" aria-labelledby="visit-title">
+    <img src="/images/nnl-banner.jpg" alt="" class="nnl-hero-img" />
+    <div class="nnl-hero-overlay"></div>
+    <div class="container position-absolute top-50 start-50 translate-middle text-center text-white px-3">
+        <h1 id="visit-title" class="display-6 fw-bold mb-2">Plan Your Visit</h1>
+        <p class="lead mb-4">Tickets, hours, directions, and tips for a magical day.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a asp-controller="Tickets" asp-action="Index" class="btn btn-brand px-4">Buy Tickets</a>
+            <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-ghost px-4">Get a Park Pass</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TODAY'S INFO ===== -->
+<section class="container py-4">
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Today's Hours</div>
+                <div class="nnl-stat-value">@todayHours</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Park Status</div>
+                <div class="nnl-stat-value @statusClass">@parkStatus</div>
+                <div class="small text-muted mt-1">@Model?.StatusUpdatedText ?? "Updated a few minutes ago"</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Today’s Events</div>
+                <div class="nnl-stat-value">@((Model?.EventsTodayCount ?? 0).ToString())</div>
+                <div class="small mt-1"><a asp-action="Events" class="link-secondary">See schedule</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ADMISSION & PASSES ===== -->
+<section class="pt-section-alt py-5" aria-labelledby="admission">
+    <div class="container">
+        <div class="d-flex align-items-end justify-content-between mb-3">
+            <h2 id="admission" class="h3 mb-0">Admission & Passes</h2>
+            <a asp-controller="ParkPasses" asp-action="Index" class="link-secondary">Compare pass types</a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h6">Day Tickets</h3>
+                        <p class="small text-muted mb-1">Choose a date, enter any time.</p>
+                        <div class="fw-semibold mb-2">From @((ticketFrom ?? 0m).ToString("C"))</div>
+                        <a asp-controller="Tickets" asp-action="Index" class="btn btn-brand mt-auto">Buy Tickets</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h6">Season Passes</h3>
+                        <p class="small text-muted mb-1">Unlimited visits all season.</p>
+                        <div class="fw-semibold mb-2">From @((passFrom ?? 0m).ToString("C"))</div>
+                        <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-brand mt-auto">See Passes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h6">Groups & Field Trips</h3>
+                        <p class="small text-muted mb-2">Discounts for 15+ guests. Booking assistance available.</p>
+                        <a asp-controller="Tickets" asp-action="Groups" class="btn btn-brand mt-auto">Request Group Rates</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="small text-muted mt-3 mb-0">Prices vary by date and season. Taxes/fees may apply.</p>
+    </div>
+</section>
+
+<!-- ===== GETTING HERE ===== -->
+<section class="container py-5" aria-labelledby="directions">
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+            <h2 id="directions" class="h3 mb-2">Getting Here</h2>
+            <address class="mb-2">
+                <strong>Never Never Land</strong><br />
+                @address
+            </address>
+
+            <ul class="small text-muted mb-3">
+                <li>Parking: free on-site lot near the <strong>Main Entrance</strong>.</li>
+                <li>Rideshare drop-off: select “<strong>Main Entrance</strong>.”</li>
+                <li>Transit: use route @Model?.TransitRoute ?? "10/11" to the park stop.</li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <a asp-action="Directions" class="btn btn-brand btn-sm">Detailed Directions</a>
+                <a asp-action="Map" class="btn btn-outline-secondary btn-sm">Park Map</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img src="/images/map-siteplan.jpg" class="w-100 rounded-4 shadow-sm" alt="Map and parking overview" />
+        </div>
+    </div>
+</section>
+
+<!-- ===== PARK LOCATIONS ===== -->
+<section class="pt-section-alt py-5" aria-labelledby="locations">
+    <div class="container">
+        <h2 id="locations" class="h3 mb-3">Park Locations</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <a asp-controller="Home" asp-action="Attractions" asp-route-id="stage" class="card card-link h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Stage</h3>
+                        <p class="small text-muted mb-0">Live storytime, character shows, and performances.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a asp-controller="Home" asp-action="Attractions" asp-route-id="the-shoe" class="card card-link h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">The Shoe</h3>
+                        <p class="small text-muted mb-0">A walk-through scene inspired by “There Was an Old Woman Who Lived in a Shoe.”</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a asp-controller="Home" asp-action="Attractions" asp-route-id="crooked-old-man-house" class="card card-link h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">The Crooked Old Man’s House</h3>
+                        <p class="small text-muted mb-0">Peek inside the crooked little house from the classic rhyme.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a asp-controller="Home" asp-action="Attractions" asp-route-id="storybook-trail" class="card card-link h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">Storybook Trail</h3>
+                        <p class="small text-muted mb-0">Forest path featuring the rest of our nursery rhymes and scenes.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SHOPPING & SNACKS ===== -->
+<section class="container py-5" aria-labelledby="shopping">
+    <h2 id="shopping" class="h3 mb-3">Shopping & Snacks</h2>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <a asp-action="Shops" asp-route-id="mother-goose-gifts" class="card card-link h-100 shadow-sm rounded-4">
+                <div class="card-body">
+                    <h3 class="h6 mb-1">Mother Goose Gifts</h3>
+                    <p class="small text-muted mb-1">Books, plush, prints, and exclusive NNL merch. Located at the Main Entrance.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm rounded-4">
+                <div class="card-body">
+                    <h3 class="h6 mb-1">Snacks & Treats</h3>
+                    <ul class="small text-muted mb-2">
+                        <li>Cotton candy</li>
+                        <li>Popcorn</li>
+                        <li>Bottled drinks & hot chocolate (seasonal)</li>
+                        <li>Ice cream novelties (seasonal)</li>
+                    </ul>
+                    <div class="small text-muted">No dining venues at opening. Picnic areas are available.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ACCESSIBILITY & SERVICES ===== -->
+<section class="pt-section-alt py-5" aria-labelledby="accessibility">
+    <div class="container">
+        <h2 id="accessibility" class="h3 mb-3">Accessibility & Guest Services</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6">Accessibility</h3>
+                        <ul class="small text-muted mb-0">
+                            <li>Wheelchair-friendly pathways (packed gravel / gentle slopes).</li>
+                            <li>Companion ticket policy available at admissions.</li>
+                            <li>Sensory tips and quiet areas marked on the map.</li>
+                        </ul>
+                        <a asp-action="Accessibility" class="btn btn-brand btn-sm mt-2">Full Accessibility Info</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <h3 class="h6">Guest Services</h3>
+                        <ul class="small text-muted mb-0">
+                            <li>Lost & found at Mother Goose Gifts.</li>
+                            <li>Stroller and wagon friendly.</li>
+                            <li>First aid available near the <strong>Stage</strong>.</li>
+                        </ul>
+                        <a asp-action="FAQ" class="btn btn-brand btn-sm mt-2">See FAQs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== THIS WEEK AT NNL ===== -->
+<section class="container py-5" aria-labelledby="events">
+    <div class="d-flex align-items-end justify-content-between mb-3">
+        <h2 id="events" class="h3 mb-0">This Week at NNL</h2>
+        <a asp-action="Events" class="link-secondary">Full calendar</a>
+    </div>
+
+    <div class="row g-4">
+        @if (events.Any())
+        {
+            foreach (var ev in events)
+            {
+                <div class="col-md-4">
+                    <article class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body d-flex flex-column">
+                            <div class="small text-muted">@ev.WhenLocalText · @(!string.IsNullOrWhiteSpace(ev.Location) ? ev.Location : "Stage")</div>
+                            <h3 class="h6 mt-1 mb-2">@ev.Title</h3>
+                            <p class="small text-muted flex-grow-1">@ev.Summary</p>
+                            <a asp-action="Events" asp-route-id="@ev.Id" class="btn btn-outline-secondary mt-2">Details</a>
+                        </div>
+                    </article>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="border rounded-4 p-3 bg-white">
+                    <div class="small text-muted">No events listed this week. Check back soon!</div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ===== POLICIES ===== -->
+<section class="pt-section-alt py-5" aria-labelledby="policies">
+    <div class="container">
+        <h2 id="policies" class="h3 mb-3">Know Before You Go</h2>
+
+        <div class="accordion" id="visitPolicies">
+            <div class="accordion-item">
+                <h3 class="accordion-header" id="foodHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#food" aria-expanded="false" aria-controls="food">
+                        Food, Snacks & Picnics
+                    </button>
+                </h3>
+                <div id="food" class="accordion-collapse collapse" aria-labelledby="foodHeading" data-bs-parent="#visitPolicies">
+                    <div class="accordion-body small text-muted">
+                        We offer snacks like cotton candy, popcorn, bottled drinks, and seasonal treats.
+                        No dining venues at opening—outside food is welcome in designated picnic areas.
+                        No alcohol or glass.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header" id="reentryHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#reentry" aria-expanded="false" aria-controls="reentry">
+                        Re-Entry & Wristbands
+                    </button>
+                </h3>
+                <div id="reentry" class="accordion-collapse collapse" aria-labelledby="reentryHeading" data-bs-parent="#visitPolicies">
+                    <div class="accordion-body small text-muted">
+                        Same-day re-entry permitted with wristband and receipt.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header" id="petsHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pets" aria-expanded="false" aria-controls="pets">
+                        Pets & Service Animals
+                    </button>
+                </h3>
+                <div id="pets" class="accordion-collapse collapse" aria-labelledby="petsHeading" data-bs-parent="#visitPolicies">
+                    <div class="accordion-body small text-muted">
+                        Leashed service animals are welcome. Pets are not permitted inside the park scenes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header" id="weatherHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#weather" aria-expanded="false" aria-controls="weather">
+                        Weather & Clothing
+                    </button>
+                </h3>
+                <div id="weather" class="accordion-collapse collapse" aria-labelledby="weatherHeading" data-bs-parent="#visitPolicies">
+                    <div class="accordion-body small text-muted">
+                        The park is mostly outdoors. Dress for changing weather; some paths may be damp after rain.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

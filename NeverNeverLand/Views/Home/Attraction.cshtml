@@ -1,0 +1,67 @@
+﻿@model NeverNeverLand.Models.ViewModels.AttractionDetailViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="container my-5">
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-md-5">
+
+            <nav class="small mb-3">
+                <a asp-action="Attractions" class="link-secondary">← Back to Attractions</a>
+            </nav>
+
+            <header class="mb-3">
+                <h1 class="h3 mb-1">@Model.Title</h1>
+                <p class="text-muted mb-0">@Model.Lead</p>
+            </header>
+
+            @if (Model.ImageUrls?.Count > 0)
+            {
+                <div class="row g-3 mb-4">
+                    @foreach (var img in Model.ImageUrls)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <img src="@img" alt="@Model.Title" class="img-fluid rounded-3 w-100" />
+                        </div>
+                    }
+                </div>
+            }
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <h2 class="h6">About this scene</h2>
+                    <p class="mb-3">@Model.Description</p>
+
+                    @if (Model.Highlights?.Any() == true)
+                    {
+                        <h3 class="h6">Highlights</h3>
+                        <ul class="mb-3">
+                            @foreach (var h in Model.Highlights)
+                            {
+                                <li>@h</li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="border rounded-4 p-3 bg-white">
+                        <h3 class="h6 mb-2">Good to know</h3>
+                        <ul class="small text-muted mb-0">
+                            @if (!string.IsNullOrWhiteSpace(Model.LocationNote))
+                            {
+                                <li><strong>Location:</strong> @Model.LocationNote</li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.AccessibilityNote))
+                            {
+                                <li><strong>Accessibility:</strong> @Model.AccessibilityNote</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

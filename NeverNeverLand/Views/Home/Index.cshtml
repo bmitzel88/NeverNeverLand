@@ -2,97 +2,262 @@
     ViewData["Title"] = "Never Never Land";
 }
 
-<!-- Hero Section -->
-<div class="hero-banner" style="background-image: url('/images/nnl-banner.jpg'); background-size: cover; background-position: center; height: 500px; position: relative;">
-    <div class="hero-content text-white text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <h1 class="display-3 font-weight-bold">Never Never Land</h1>
-        <p class="lead">Where storybook dreams come to life</p>
+<!-- ===== SERVICE ALERT ===== -->
+<!-- Erase d-none from class when alert needs to be made -->
+<div class="bg-danger text-white d-none">
+    <div class="container py-2 small">
+        <strong>Service Alert:</strong> Never Never Land closed today for maintenance.
+        <a asp-controller="Home" asp-action="Alerts" class="text-white text-decoration-underline">More info</a>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 my-5">
-    <div class="card-body p-4 p-md-5">
-        <h2 class="h4 text-center mb-4">Explore Never Never Land</h2>
+<!-- ===== HERO ===== -->
+<section class="nnl-hero position-relative overflow-hidden">
+    <img src="/images/entrance.png" alt="Never Never Land" class="nnl-hero-img">
+    <div class="nnl-hero-overlay"></div>
 
+    <div class="container position-absolute top-50 start-50 translate-middle text-center text-white px-3">
+        <h1 class="display-5 fw-bold mb-2">Never Never Land</h1>
+        <p class="lead mb-4">Walk through the stories you grew up with.</p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a asp-controller="Tickets" asp-action="Index" class="btn btn-ghost px-4">Buy Tickets</a>
+            <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-ghost px-4">Get a Park Pass</a>
+            <a asp-controller="Home" asp-action="Visit" class="btn btn-ghost px-4">Plan Your Visit</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TODAY'S HOURS & STATUS ===== -->
+<section class="container py-4">
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Today's Hours</div>
+                <div class="nnl-stat-value">10:00 AM – 7:00 PM</div>
+                <div class="small mt-1">
+                    <a asp-controller="Home" asp-action="Hours" class="link-secondary">Full hours & calendar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Park Status</div>
+                <div class="nnl-stat-value text-success">Open</div>
+                <div class="small text-muted mt-1">Last updated 15 min ago</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="nnl-stat text-center">
+                <div class="nnl-stat-label">Today’s Events</div>
+                <div class="nnl-stat-value">3 shows</div>
+                <div class="small mt-1">
+                    <a asp-controller="Home" asp-action="Events" class="link-secondary">See schedule</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== QUICK ACTIONS  ===== -->
+<section class="pt-section-alt py-5">
+    <div class="container">
         <div class="row g-4">
-            <!-- Attractions -->
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card h-100 shadow-sm rounded-4">
                     <div class="card-body d-flex flex-column">
-                        <div class="mb-2 fs-4">🎡</div>
-                        <h3 class="h5">Attractions</h3>
-                        <p class="text-muted small flex-grow-1">
-                            Walk through timeless fairytales with original scenes.
-                        </p>
-                        <div>
-                            <a asp-controller="Home" asp-action="Attractions" class="btn btn-primary w-100">
-                                View Attractions
-                            </a>
-                        </div>
+                        <h3 class="h6">Day Tickets</h3>
+                        <p class="small text-muted flex-grow-1">Choose a date and enter any time.</p>
+                        <a asp-controller="Tickets" asp-action="Index" class="btn btn-brand mt-2">Buy Tickets</a>
                     </div>
                 </div>
             </div>
-
-            <!-- Events -->
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card h-100 shadow-sm rounded-4">
                     <div class="card-body d-flex flex-column">
-                        <div class="mb-2 fs-4">🎭</div>
-                        <h3 class="h5">Events</h3>
-                        <p class="text-muted small flex-grow-1">
-                            Live storytelling, character shows, and magical experiences.
-                        </p>
-                        <div>
-                            <a asp-controller="Home" asp-action="Events" class="btn btn-success w-100">
-                                See Events
-                            </a>
-                        </div>
+                        <h3 class="h6">Park Passes</h3>
+                        <p class="small text-muted flex-grow-1">Unlimited visits for a season. Guest allowances by pass type.</p>
+                        <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-brand mt-2">See Passes</a>
                     </div>
                 </div>
             </div>
-
-            <!-- Park Pass -->
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card h-100 shadow-sm rounded-4">
                     <div class="card-body d-flex flex-column">
-                        <div class="mb-2 fs-4">🎟️</div>
-                        <h3 class="h5">Park Pass</h3>
-                        <p class="text-muted small flex-grow-1">
-                            Become part of the magic with unlimited seasonal visits.
-                        </p>
-                        <div>
-                            <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-warning w-100">
-                                Get a Pass
-                            </a>
-                        </div>
+                        <h3 class="h6">Member Portal</h3>
+                        <p class="small text-muted flex-grow-1">View passes, update payment, manage guests.</p>
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-brand mt-2">Sign In</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Park News & Updates -->
-<div class="card border-0 shadow-sm rounded-4 mb-5">
-    <div class="card-body p-4 p-md-5">
-        <h2 class="h4 text-center mb-4">Park News &amp; Updates</h2>
+<!-- ===== PAGE CONTENT CARD ===== -->
+<section class="container my-5">
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-md-5">
 
-        <!-- Example two-column news layout; swap for a loop later -->
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="border rounded-3 p-3 h-100">
-                    <h3 class="h6 mb-1">Restoration Progress</h3>
-                    <p class="text-muted small mb-0">
-                        The Never Never Land figures are being re-molded, moving us closer to reopening.
-                    </p>
+            <!-- ===== Explore the Park ===== -->
+            <div class="d-flex align-items-end justify-content-between mb-3">
+                <h2 class="h3 mb-0">Explore the Park</h2>
+                <a asp-controller="Home" asp-action="Attractions" class="link-secondary">View all scenes</a>
+            </div>
+
+            <div class="row g-4">
+                <!-- Storybook Trail -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <a asp-controller="Home" asp-action="Attractions" asp-route-id="storybook-trail" class="card card-link h-100 shadow-sm rounded-4">
+                        <img src="/images/forest-trail.png" class="card-img-top rounded-top-4" alt="Storybook Trail">
+                        <div class="card-body">
+                            <h3 class="h6 mb-1">Storybook Trail</h3>
+                            <p class="small text-muted mb-0">Forest path featuring the rest of our nursery rhymes.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Stage -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <a asp-controller="Home" asp-action="Attractions" asp-route-id="stage" class="card card-link h-100 shadow-sm rounded-4">
+                        <img src="/images/stage.png" class="card-img-top rounded-top-4" alt="Stage">
+                        <div class="card-body">
+                            <h3 class="h6 mb-1">Stage</h3>
+                            <p class="small text-muted mb-0">Live storytime, character shows, and performances.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- The Shoe -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <a asp-controller="Home" asp-action="Attractions" asp-route-id="the-shoe" class="card card-link h-100 shadow-sm rounded-4">
+                        <img src="/images/shoe.png" class="card-img-top rounded-top-4" alt="The Shoe">
+                        <div class="card-body">
+                            <h3 class="h6 mb-1">The Shoe</h3>
+                            <p class="small text-muted mb-0">Walk-through scene from “Old Woman Who Lived in a Shoe.”</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Crooked Old Man’s House -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <a asp-controller="Home" asp-action="Attractions" asp-route-id="crooked-old-man-house" class="card card-link h-100 shadow-sm rounded-4">
+                        <img src="/images/crooked.png" class="card-img-top rounded-top-4" alt="The Crooked Old Man’s House">
+                        <div class="card-body">
+                            <h3 class="h6 mb-1">The Crooked Old Man’s House</h3>
+                            <p class="small text-muted mb-0">Peek inside the crooked little house from the classic rhyme.</p>
+                        </div>
+                    </a>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="border rounded-3 p-3 h-100">
-                    <h3 class="h6 mb-1">First figure cast</h3>
-                    <p class="text-muted small mb-0">
-                        We’ve successfully cast a new figure — a big step toward what’s to come.
-                    </p>
+
+            <!-- ===== Today & This Week (Events) ===== -->
+            <hr class="my-5" />
+            <div class="d-flex align-items-end justify-content-between mb-3">
+                <h2 class="h3 mb-0">Today & This Week</h2>
+                <a asp-controller="Home" asp-action="Events" class="link-secondary">Full calendar</a>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <article class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body d-flex flex-column">
+                            <div class="small text-muted">Today · 11:00 AM · Stage</div>
+                            <h3 class="h6 mt-1 mb-2">Live Storytime: Three Little Pigs</h3>
+                            <p class="small text-muted flex-grow-1">Interactive show for all ages.</p>
+                            <a asp-controller="Home" asp-action="Events" class="btn btn-outline-secondary mt-2">Details</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-4">
+                    <article class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body d-flex flex-column">
+                            <div class="small text-muted">Fri · 3:00 PM · Stage</div>
+                            <h3 class="h6 mt-1 mb-2">Character Meet & Greet</h3>
+                            <p class="small text-muted flex-grow-1">Photos and autographs with our cast.</p>
+                            <a asp-controller="Home" asp-action="Events" class="btn btn-outline-secondary mt-2">Details</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-4">
+                    <article class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body d-flex flex-column">
+                            <div class="small text-muted">Sat · 1:30 PM · The Shoe</div>
+                            <h3 class="h6 mt-1 mb-2">Puppet Workshop</h3>
+                            <p class="small text-muted flex-grow-1">Make-and-take craft for kids.</p>
+                            <a asp-controller="Home" asp-action="Events" class="btn btn-outline-secondary mt-2">Details</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- ===== Plan Your Visit ===== -->
+            <hr class="my-5" />
+            <div class="d-flex align-items-end justify-content-between mb-3">
+                <h2 class="h3 mb-0">Plan Your Visit</h2>
+                <a asp-controller="Home" asp-action="Visit" class="link-secondary">All visitor info</a>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <h3 class="h6">Hours & Admission</h3>
+                            <p class="small text-muted">Seasonal hours, prices, and holiday schedule.</p>
+                            <a asp-controller="Home" asp-action="Hours" class="btn btn-brand btn-sm">View hours</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <h3 class="h6">Map & Directions</h3>
+                            <p class="small text-muted">Parking, main entrance, and wayfinding.</p>
+                            <a asp-controller="Home" asp-action="Directions" class="btn btn-brand btn-sm">Get directions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <h3 class="h6">Accessibility</h3>
+                            <p class="small text-muted">Mobility access, sensory tips, companion policies.</p>
+                            <a asp-controller="Home" asp-action="Accessibility" class="btn btn-brand btn-sm">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100 shadow-sm rounded-4">
+                        <div class="card-body">
+                            <h3 class="h6">FAQs</h3>
+                            <p class="small text-muted">What to bring, weather, food policy, and more.</p>
+                            <a asp-controller="Home" asp-action="FAQ" class="btn btn-brand btn-sm">Read FAQs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Park News ===== -->
+            <hr class="my-5" />
+            <div class="d-flex align-items-end justify-content-between mb-3">
+                <h2 class="h3 mb-0">Park News</h2>
+                <a asp-controller="News" asp-action="Index" class="link-secondary">More news</a>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <article class="border rounded-4 p-3 h-100 bg-white">
+                        <h3 class="h6 mb-1">New Scene Opens: The Crooked Old Man’s House</h3>
+                        <p class="small text-muted mb-0">Come see our latest walk-through vignette this weekend.</p>
+                    </article>
+                </div>
+                <div class="col-md-6">
+                    <article class="border rounded-4 p-3 h-100 bg-white">
+                        <h3 class="h6 mb-1">Extended Hours for Fall</h3>
+                        <p class="small text-muted mb-0">Select Fridays now open until 8 PM.</p>
+                    </article>
                 </div>
             </div>
         </div>
+    </div>
+</section>

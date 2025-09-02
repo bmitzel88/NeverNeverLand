@@ -1,0 +1,124 @@
+﻿@page
+@model Areas.Identity.Pages.Account.Manage.IndexModel
+@{
+    ViewData["Title"] = "Member Portal";
+    var seasonRange = $"{Model.SeasonStart:MMM d} – {Model.SeasonEnd:MMM d, yyyy}";
+}
+
+<section class="container my-5">
+  <div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4 p-md-5">
+      <div class="row g-4">
+        <aside class="col-md-3">
+          @await Html.PartialAsync("_ManageNav")
+        </aside>
+
+        <div class="col-md-9">
+          <h1 class="h4 mb-3">Member Portal</h1>
+
+          @if (!string.IsNullOrEmpty(Model.PortalMessage))
+          { <div class="alert alert-success small">@Model.PortalMessage</div> }
+
+          <h2 class="h6 mb-2">Your Park Pass</h2>
+          @if (Model.Pass is null)
+          {
+            <div class="border rounded-4 p-3 bg-white mb-4 d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <div class="fw-semibold">No active pass</div>
+                <div class="small text-muted">Enjoy unlimited visits with a Season Pass.</div>
+              </div>
+              <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-brand btn-sm mt-2 mt-md-0">Get a Pass</a>
+            </div>
+          }
+          else
+          {
+            <div class="border rounded-4 p-3 bg-white mb-4">
+              <div class="row g-2 align-items-center">
+                <div class="col-lg-8">
+                  <div class="fw-semibold">@Model.Pass.TypeName</div>
+                  <div class="small text-muted">
+                    Valid @Model.Pass.ValidFrom.ToString("MMM d, yyyy") – @Model.Pass.ValidTo.ToString("MMM d, yyyy")
+                  </div>
+                  <div class="small mt-1">Guests included: <strong>@Model.Pass.GuestAllowance</strong>
+                    @(Model.Pass.IsActive ? Html.Raw("<span class='badge bg-success ms-2'>Active</span>")
+                                           : Html.Raw("<span class='badge bg-secondary ms-2'>Expired</span>"))
+                  </div>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                  <a asp-controller="ParkPasses" asp-action="Manage" class="btn btn-outline-secondary btn-sm">Manage pass</a>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="d-flex align-items-end justify-content-between mb-2">
+            <h2 class="h6 mb-0">Your Tickets</h2>
+            <div class="small text-muted">Valid any day during the season · @seasonRange</div>
+          </div>
+
+          @if (Model.Tickets is null || !Model.Tickets.Any())
+          {
+            <div class="border rounded-4 p-3 bg-white d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <div class="fw-semibold">No tickets yet</div>
+                <div class="small text-muted">Buy anytime and use on any operating day this season.</div>
+              </div>
+              <a asp-controller="Tickets" asp-action="Index" class="btn btn-brand btn-sm mt-2 mt-md-0">Buy Tickets</a>
+            </div>
+          }
+          else
+          {
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr><th>Season</th><th>Status</th><th>Purchased</th><th>Used</th><th>Expires</th><th class="text-end">Actions</th></tr>
+                </thead>
+                <tbody>
+                @foreach (var t in Model.Tickets)
+                {
+                  var badge = t.State switch {
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Valid => "badge bg-success",
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Used => "badge bg-secondary",
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.ExpiredUnused => "badge bg-danger",
+                    _ => "badge bg-secondary"
+                  };
+                  var label = t.State switch {
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Valid => "Valid",
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Used => "Used",
+                    Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.ExpiredUnused => "Expired (unused)",
+                    _ => "—"
+                  };
+                  <tr>
+                    <td>@t.Season</td>
+                    <td><span class="@badge">@label</span></td>
+                    <td>@t.PurchasedOn.ToString("MMM d, yyyy")</td>
+                    <td>@(t.RedeemedOn?.ToString("MMM d, yyyy") ?? "—")</td>
+                    <td>@t.ExpiresOn.ToString("MMM d, yyyy")</td>
+                    <td class="text-end">
+                      @if (t.State == Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Valid)
+                      { <a asp-controller="Tickets" asp-action="Details" asp-route-id="@t.Id" class="btn btn-outline-secondary btn-sm">View</a> }
+                      else if (t.State == Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.ExpiredUnused)
+                      {
+                        <form method="post" asp-page-handler="EraseTicket" class="d-inline">
+                          <input type="hidden" name="id" value="@t.Id" />
+                          <button type="submit" class="btn btn-outline-danger btn-sm"
+                                  onclick="return confirm('Erase this expired, unused ticket?');">Erase</button>
+                        </form>
+                      }
+                      else { <span class="text-muted small">No actions</span>; }
+                    </td>
+                  </tr>
+                }
+                </tbody>
+              </table>
+            </div>
+            <div class="small text-muted">
+              Tickets are not date-specific and can be used any operating day within the season they were purchased for.
+              Unused tickets expire at season end and can be erased.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

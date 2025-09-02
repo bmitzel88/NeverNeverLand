@@ -1,42 +1,25 @@
 ﻿@model NeverNeverLand.Models.Ticket
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ticket Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PurchaseDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PurchaseDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ExpirationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ExpirationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsUsed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsUsed)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.TicketId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<h1>Ticket Details</h1>
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Ticket ID</dt>
+            <dd class="col-sm-9">@Model.TicketId</dd>
+            <dt class="col-sm-3">Holder Name</dt>
+            <dd class="col-sm-9">@Model.HolderName</dd>
+            <dt class="col-sm-3">Admission Type</dt>
+            <dd class="col-sm-9">@Model.AdmissionType</dd>
+            <dt class="col-sm-3">Purchased</dt>
+            <dd class="col-sm-9">@Model.PurchaseDate.ToString("MMM d, yyyy")</dd>
+            <dt class="col-sm-3">Expires</dt>
+            <dd class="col-sm-9">@Model.ExpirationDate.ToString("MMM d, yyyy")</dd>
+            <dt class="col-sm-3">Used?</dt>
+            <dd class="col-sm-9">@(Model.IsUsed ? "Yes" : "No")</dd>
+        </dl>
+        <a asp-action="Index" class="btn btn-secondary">Back to Tickets</a>
+    </div>
 </div>

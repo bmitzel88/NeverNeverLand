@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Map & Directions";
+}
+<section class="container my-5">
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-md-5">
+            <h1 class="h3 mb-4">Map &amp; Directions</h1>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <address class="mb-2">
+                        <strong>Never Never Land</strong><br />
+                        123 Evergreen Way, Tacoma, WA 98407
+                    </address>
+
+                    <ul class="small text-muted mb-3">
+                        <li><strong>Parking:</strong> free on-site lot near the Main Entrance.</li>
+                        <li><strong>Drop-off:</strong> choose “Main Entrance – Never Never Land.”</li>
+                        <li><strong>Transit:</strong> routes 10/11 to the park stop.</li>
+                    </ul>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Map" class="btn btn-outline-secondary btn-sm">Park Map</a>
+                        <a asp-action="Hours" class="btn btn-brand btn-sm">View Hours</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="/images/map-siteplan.jpg" class="w-100 rounded-4 shadow-sm" alt="Map and parking overview" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
