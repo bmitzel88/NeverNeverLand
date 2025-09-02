@@ -1,0 +1,28 @@
+@model IEnumerable<NeverNeverLand.Models.Price>
+@{
+    ViewData["Title"] = "Adjust Ticket Prices";
+}
+<h1>Adjust Ticket Prices</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Season</th>
+            <th>Item</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Active</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.SeasonId</td>
+            <td>@p.Item</td>
+            <td>@p.Amount.ToString("C")</td>
+            <td>@p.Currency</td>
+            <td>@(p.IsActive ? "Yes" : "No")</td>
+        </tr>
+    }
+    </tbody>
+</table>

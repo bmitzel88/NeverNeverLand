@@ -1,0 +1,17 @@
+@model IEnumerable<string>
+@{
+    ViewData["Title"] = "Site Alerts";
+}
+<h1>Site Alerts</h1>
+<form asp-action="Alerts" method="post" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="alert" class="form-control" placeholder="New alert message..." />
+        <button type="submit" class="btn btn-primary">Send Alert</button>
+    </div>
+</form>
+<ul class="list-group">
+@foreach (var alert in Model)
+{
+    <li class="list-group-item">@alert</li>
+}
+</ul>

@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NeverNeverLand.Data;
+using NeverNeverLand.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Areas.Identity.Pages.Account.Manage
 {
@@ -9,7 +12,12 @@ namespace Areas.Identity.Pages.Account.Manage
     public class IndexModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
-        public IndexModel(UserManager<IdentityUser> userManager) => _userManager = userManager;
+        private readonly ApplicationDbContext _db;
+        public IndexModel(UserManager<IdentityUser> userManager, ApplicationDbContext db)
+        {
+            _userManager = userManager;
+            _db = db;
+        }
 
         // Portal data
         public ParkPassSummary? Pass { get; set; }
@@ -25,23 +33,49 @@ namespace Areas.Identity.Pages.Account.Manage
 
             (SeasonStart, SeasonEnd) = CurrentSeason();
 
-            // TODO: load real data for user; sample data for layout:
-            Pass = null; // no pass by default
+            // Load real park pass for this user (active for current season)
+            var pass = await _db.ParkPass
+                .Where(p => p.UserId == user.Id && p.SeasonYear == SeasonStart.Year && p.Status == "Active")
+                .OrderByDescending(p => p.ExpiresAt)
+                .FirstOrDefaultAsync();
 
-            Tickets = new List<TicketSummary>
+            if (pass != null)
             {
-                new TicketSummary { Id=Guid.NewGuid(), Season=SeasonStart.Year, PurchasedOn=SeasonStart.AddDays(12), ExpiresOn=SeasonEnd, RedeemedOn=null },
-                new TicketSummary { Id=Guid.NewGuid(), Season=SeasonStart.Year, PurchasedOn=SeasonStart.AddDays(20), ExpiresOn=SeasonEnd, RedeemedOn=SeasonStart.AddDays(45) },
-                new TicketSummary { Id=Guid.NewGuid(), Season=SeasonStart.Year-1, PurchasedOn=new DateTime(SeasonStart.Year-1,6,10), ExpiresOn=new DateTime(SeasonStart.Year-1,10,31), RedeemedOn=null }
+                Pass = new ParkPassSummary
+                {
+                    PassNumber = pass.QrToken,
+                    TypeName = pass.Type + " Pass",
+                    ValidFrom = new DateTime(pass.SeasonYear, 4, 1),
+                    ValidTo = pass.ExpiresAt,
+                    GuestAllowance = pass.MaxGuests
+                };
             }
-            .OrderByDescending(t => t.Season).ThenByDescending(t => t.PurchasedOn).ToList();
+            else
+            {
+                Pass = null;
+            }
+
+            // Load real tickets for this user
+            var userTickets = await _db.Ticket
+                .Where(t => t.UserId == user.Id)
+                .OrderByDescending(t => t.PurchaseDate)
+                .ToListAsync();
+
+            Tickets = userTickets.Select(t => new TicketSummary
+            {
+                Id = t.TicketId, // Use the real TicketId
+                Season = SeasonStart.Year, // Or use a season property if available
+                PurchasedOn = t.PurchaseDate,
+                ExpiresOn = t.ExpirationDate,
+                RedeemedOn = t.IsUsed ? t.ExpirationDate : (DateTime?)null // Or use a real RedeemedOn if you have it
+            }).ToList();
 
             if (TempData.TryGetValue("PortalMessage", out var msg)) PortalMessage = msg?.ToString();
             return Page();
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> OnPostEraseTicketAsync(Guid id)
+        public async Task<IActionResult> OnPostEraseTicketAsync(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user is null) return NotFound("Unable to load user.");
@@ -69,7 +103,7 @@ namespace Areas.Identity.Pages.Account.Manage
         }
         public class TicketSummary
         {
-            public Guid Id { get; set; }
+            public int Id { get; set; } // Use TicketId (int)
             public int Season { get; set; }
             public DateTime PurchasedOn { get; set; }
             public DateTime ExpiresOn { get; set; }

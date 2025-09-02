@@ -36,14 +36,16 @@
               <div class="row g-2 align-items-center">
                 <div class="col-lg-8">
                   <div class="fw-semibold">@Model.Pass.TypeName</div>
-                  <div class="small text-muted">Pass #@Model.Pass.PassNumber · Valid @Model.Pass.ValidFrom:MMM d – @Model.Pass.ValidTo:MMM d, yyyy</div>
+                  <div class="small text-muted">
+                    Valid @Model.Pass.ValidFrom.ToString("MMM d, yyyy") – @Model.Pass.ValidTo.ToString("MMM d, yyyy")
+                  </div>
                   <div class="small mt-1">Guests included: <strong>@Model.Pass.GuestAllowance</strong>
                     @(Model.Pass.IsActive ? Html.Raw("<span class='badge bg-success ms-2'>Active</span>")
                                            : Html.Raw("<span class='badge bg-secondary ms-2'>Expired</span>"))
                   </div>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                  <a asp-controller="ParkPasses" asp-action="Index" class="btn btn-outline-secondary btn-sm">Manage pass</a>
+                  <a asp-controller="ParkPasses" asp-action="Manage" class="btn btn-outline-secondary btn-sm">Manage pass</a>
                 </div>
               </div>
             </div>
@@ -89,9 +91,9 @@
                   <tr>
                     <td>@t.Season</td>
                     <td><span class="@badge">@label</span></td>
-                    <td>@t.PurchasedOn:MMM d, yyyy</td>
+                    <td>@t.PurchasedOn.ToString("MMM d, yyyy")</td>
                     <td>@(t.RedeemedOn?.ToString("MMM d, yyyy") ?? "—")</td>
-                    <td>@t.ExpiresOn:MMM d, yyyy</td>
+                    <td>@t.ExpiresOn.ToString("MMM d, yyyy")</td>
                     <td class="text-end">
                       @if (t.State == Areas.Identity.Pages.Account.Manage.IndexModel.TicketState.Valid)
                       { <a asp-controller="Tickets" asp-action="Details" asp-route-id="@t.Id" class="btn btn-outline-secondary btn-sm">View</a> }

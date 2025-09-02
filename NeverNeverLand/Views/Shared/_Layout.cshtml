@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -51,8 +55,28 @@
                         <li class="nav-item"><a class="nav-link text-white" asp-controller="Home" asp-action="About">About</a></li>
                         <li class="nav-item"><a class="nav-link text-white" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a asp-area="Account"
+                                   asp-page="/Manage/Index"
+                                   class="btn btn-brand btn-sm my-2 my-lg-0">
+                                    Member Portal
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                </li>
+                            }
+                        }
+                    </ul>
                 </div>
             </div>
+
         </nav>
     </header>
 
