@@ -67,6 +67,6 @@ Completed updates:
 
 For questions, collaborations, or historical contributions to the Never Never Land revival project:
 
-📧 Email: [support@neverneverlandpark.com(mailto:support@neverneverlandpark.com)
+📧 Email: [support@neverneverlandpark.com](mailto:support@neverneverlandpark.com)
 
 ---
